@@ -1,9 +1,11 @@
 package com.example.ui.screens
 
+import android.content.Intent
 import android.net.Uri
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -14,20 +16,25 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.OpenInNew
 import androidx.compose.material.icons.filled.CloudDone
 import androidx.compose.material.icons.filled.CloudDownload
 import androidx.compose.material.icons.filled.CloudQueue
 import androidx.compose.material.icons.filled.CloudSync
 import androidx.compose.material.icons.filled.CloudUpload
 import androidx.compose.material.icons.filled.DarkMode
+import androidx.compose.material.icons.filled.DeleteSweep
 import androidx.compose.material.icons.filled.LightMode
-import androidx.compose.material.icons.filled.SettingsBrightness
-import androidx.compose.material.icons.filled.TrackChanges
 import androidx.compose.material.icons.filled.Security
+import androidx.compose.material.icons.filled.SettingsBrightness
+import androidx.compose.material.icons.filled.SystemUpdate
+import androidx.compose.material.icons.filled.TrackChanges
+import androidx.compose.material.icons.filled.VerifiedUser
 import androidx.compose.material.icons.filled.Wifi
 import androidx.compose.material.icons.filled.WifiOff
 import androidx.compose.material3.AlertDialog
@@ -52,7 +59,9 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.testTag
+import com.example.BuildConfig
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
@@ -79,8 +88,11 @@ fun SettingsAndSyncScreen(
     onUpdateGoals: (Int, Int, Int, Int, Int, Int) -> Unit,
     onThemeChange: (String) -> Unit,
     onResetSyncState: () -> Unit,
+    onClearAllHistory: () -> Unit = {},
     modifier: Modifier = Modifier
 ) {
+    val context = LocalContext.current
+
     // Goals state
     var caloriesText by remember(currentGoal) { mutableStateOf(currentGoal.calorieTarget.toString()) }
     var proteinText by remember(currentGoal) { mutableStateOf(currentGoal.proteinTargetGrams.toString()) }
@@ -90,6 +102,8 @@ fun SettingsAndSyncScreen(
     var waterText by remember(currentGoal) { mutableStateOf(currentGoal.waterTargetMl.toString()) }
     var goalsSavedMessage by remember { mutableStateOf(false) }
     var showPrivacyDialog by remember { mutableStateOf(false) }
+    var showClearHistoryDialog by remember { mutableStateOf(false) }
+    var historyClearedMessage by remember { mutableStateOf(false) }
 
     // Google Drive SAF launchers
     val createDocLauncher = rememberLauncherForActivityResult(
@@ -628,45 +642,263 @@ fun SettingsAndSyncScreen(
             }
         }
 
-        // About & Privacy Policy
-        Surface(
-            modifier = Modifier.fillMaxWidth(),
-            color = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.5f),
-            shape = RoundedCornerShape(14.dp)
+        // App Version, Update Status & Data Management Card
+        Card(
+            modifier = Modifier
+                .fillMaxWidth()
+                .testTag("app_version_card"),
+            shape = RoundedCornerShape(18.dp),
+            colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surface),
+            elevation = CardDefaults.cardElevation(defaultElevation = 1.dp)
         ) {
-            Column(modifier = Modifier.padding(14.dp)) {
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(16.dp),
+                verticalArrangement = Arrangement.spacedBy(12.dp)
+            ) {
+                // Header row
                 Row(
                     modifier = Modifier.fillMaxWidth(),
                     horizontalArrangement = Arrangement.SpaceBetween,
                     verticalAlignment = Alignment.CenterVertically
                 ) {
-                    Text(
-                        text = "NutriLog v2.0",
-                        fontWeight = FontWeight.Bold,
-                        style = MaterialTheme.typography.labelMedium
-                    )
+                    Row(verticalAlignment = Alignment.CenterVertically) {
+                        Surface(
+                            shape = CircleShape,
+                            color = MaterialTheme.colorScheme.primaryContainer,
+                            modifier = Modifier.size(36.dp)
+                        ) {
+                            Box(contentAlignment = Alignment.Center) {
+                                Icon(
+                                    imageVector = Icons.Default.VerifiedUser,
+                                    contentDescription = null,
+                                    tint = MaterialTheme.colorScheme.primary,
+                                    modifier = Modifier.size(20.dp)
+                                )
+                            }
+                        }
+                        Spacer(modifier = Modifier.width(10.dp))
+                        Column {
+                            Text(
+                                text = "NutriLog v${BuildConfig.VERSION_NAME}",
+                                style = MaterialTheme.typography.titleMedium,
+                                fontWeight = FontWeight.Bold
+                            )
+                            Text(
+                                text = "Build ${BuildConfig.VERSION_CODE} • Production",
+                                style = MaterialTheme.typography.labelSmall,
+                                color = MaterialTheme.colorScheme.onSurfaceVariant
+                            )
+                        }
+                    }
 
+                    Surface(
+                        shape = RoundedCornerShape(8.dp),
+                        color = MaterialTheme.colorScheme.primary.copy(alpha = 0.12f)
+                    ) {
+                        Text(
+                            text = "Installed",
+                            style = MaterialTheme.typography.labelSmall,
+                            fontWeight = FontWeight.Bold,
+                            color = MaterialTheme.colorScheme.primary,
+                            modifier = Modifier.padding(horizontal = 8.dp, vertical = 4.dp)
+                        )
+                    }
+                }
+
+                HorizontalDivider(color = MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.5f))
+
+                // Build / Install Time info
+                val packageInfo = remember(context) {
+                    try {
+                        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.TIRAMISU) {
+                            context.packageManager.getPackageInfo(
+                                context.packageName,
+                                android.content.pm.PackageManager.PackageInfoFlags.of(0)
+                            )
+                        } else {
+                            @Suppress("DEPRECATION")
+                            context.packageManager.getPackageInfo(context.packageName, 0)
+                        }
+                    } catch (e: Exception) {
+                        null
+                    }
+                }
+
+                val lastUpdatedTimeStr = remember(packageInfo) {
+                    val updateTime = packageInfo?.lastUpdateTime ?: System.currentTimeMillis()
+                    val sdf = SimpleDateFormat("MMM d, yyyy • h:mm a", Locale.getDefault())
+                    sdf.format(Date(updateTime))
+                }
+
+                Column(verticalArrangement = Arrangement.spacedBy(4.dp)) {
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.SpaceBetween
+                    ) {
+                        Text(
+                            text = "Last Updated On Device",
+                            style = MaterialTheme.typography.bodySmall,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant
+                        )
+                        Text(
+                            text = lastUpdatedTimeStr,
+                            style = MaterialTheme.typography.bodySmall,
+                            fontWeight = FontWeight.SemiBold
+                        )
+                    }
+
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.SpaceBetween
+                    ) {
+                        Text(
+                            text = "Application ID",
+                            style = MaterialTheme.typography.bodySmall,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant
+                        )
+                        Text(
+                            text = context.packageName,
+                            style = MaterialTheme.typography.bodySmall,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant
+                        )
+                    }
+                }
+
+                // Check Google Play for Updates Button
+                Button(
+                    onClick = {
+                        try {
+                            val playIntent = Intent(
+                                Intent.ACTION_VIEW,
+                                Uri.parse("market://details?id=${context.packageName}")
+                            ).apply {
+                                addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+                            }
+                            context.startActivity(playIntent)
+                        } catch (e: Exception) {
+                            val webIntent = Intent(
+                                Intent.ACTION_VIEW,
+                                Uri.parse("https://play.google.com/store/apps/details?id=${context.packageName}")
+                            ).apply {
+                                addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+                            }
+                            context.startActivity(webIntent)
+                        }
+                    },
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .testTag("check_play_store_updates_button"),
+                    shape = RoundedCornerShape(12.dp)
+                ) {
+                    Icon(
+                        imageVector = Icons.Default.SystemUpdate,
+                        contentDescription = null,
+                        modifier = Modifier.size(18.dp)
+                    )
+                    Spacer(modifier = Modifier.width(8.dp))
+                    Text("Check for Updates on Google Play", fontWeight = FontWeight.SemiBold)
+                }
+
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.spacedBy(8.dp)
+                ) {
                     OutlinedButton(
                         onClick = { showPrivacyDialog = true },
-                        shape = RoundedCornerShape(8.dp),
-                        modifier = Modifier.testTag("privacy_policy_button")
+                        modifier = Modifier
+                            .weight(1f)
+                            .testTag("privacy_policy_button"),
+                        shape = RoundedCornerShape(10.dp)
                     ) {
                         Icon(
                             imageVector = Icons.Default.Security,
                             contentDescription = null,
-                            modifier = Modifier.size(14.dp)
+                            modifier = Modifier.size(16.dp)
                         )
-                        Spacer(modifier = Modifier.width(4.dp))
-                        Text("Privacy Policy", style = MaterialTheme.typography.labelSmall)
+                        Spacer(modifier = Modifier.width(6.dp))
+                        Text("Privacy Policy", style = MaterialTheme.typography.labelMedium)
+                    }
+
+                    OutlinedButton(
+                        onClick = { showClearHistoryDialog = true },
+                        modifier = Modifier
+                            .weight(1f)
+                            .testTag("clear_history_logs_button"),
+                        shape = RoundedCornerShape(10.dp),
+                        colors = androidx.compose.material3.ButtonDefaults.outlinedButtonColors(
+                            contentColor = MaterialTheme.colorScheme.error
+                        )
+                    ) {
+                        Icon(
+                            imageVector = Icons.Default.DeleteSweep,
+                            contentDescription = null,
+                            modifier = Modifier.size(16.dp)
+                        )
+                        Spacer(modifier = Modifier.width(6.dp))
+                        Text("Reset Logs", style = MaterialTheme.typography.labelMedium)
                     }
                 }
-                Spacer(modifier = Modifier.height(6.dp))
-                Text(
-                    text = "Powered by Google Gemini & Firebase AI Logic. Nutrition information is provided for tracking and reference purposes.",
-                    style = MaterialTheme.typography.labelSmall,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant
-                )
+
+                if (historyClearedMessage) {
+                    Surface(
+                        color = MaterialTheme.colorScheme.primaryContainer,
+                        shape = RoundedCornerShape(8.dp),
+                        modifier = Modifier.fillMaxWidth()
+                    ) {
+                        Text(
+                            text = "✓ History reset: all meal & water logs cleared.",
+                            style = MaterialTheme.typography.labelSmall,
+                            color = MaterialTheme.colorScheme.onPrimaryContainer,
+                            modifier = Modifier.padding(horizontal = 10.dp, vertical = 6.dp)
+                        )
+                    }
+                }
             }
+        }
+
+        if (showClearHistoryDialog) {
+            AlertDialog(
+                onDismissRequest = { showClearHistoryDialog = false },
+                title = {
+                    Row(verticalAlignment = Alignment.CenterVertically) {
+                        Icon(
+                            imageVector = Icons.Default.DeleteSweep,
+                            contentDescription = null,
+                            tint = MaterialTheme.colorScheme.error,
+                            modifier = Modifier.size(24.dp)
+                        )
+                        Spacer(modifier = Modifier.width(8.dp))
+                        Text("Clear All Logged History?")
+                    }
+                },
+                text = {
+                    Text(
+                        text = "Are you sure you want to clear all food and water logs? This will reset your history to empty. Your saved custom foods and target goals will not be affected.",
+                        style = MaterialTheme.typography.bodyMedium
+                    )
+                },
+                confirmButton = {
+                    Button(
+                        onClick = {
+                            onClearAllHistory()
+                            showClearHistoryDialog = false
+                            historyClearedMessage = true
+                        },
+                        colors = androidx.compose.material3.ButtonDefaults.buttonColors(
+                            containerColor = MaterialTheme.colorScheme.error
+                        )
+                    ) {
+                        Text("Clear All Logs")
+                    }
+                },
+                dismissButton = {
+                    TextButton(onClick = { showClearHistoryDialog = false }) {
+                        Text("Cancel")
+                    }
+                }
+            )
         }
 
         if (showPrivacyDialog) {

@@ -106,6 +106,16 @@ class NutriRepository(
         foodLogDao.deleteLogById(id)
     }
 
+    suspend fun clearAllHistoryLogs() {
+        foodLogDao.clearAllLogs()
+        waterLogDao.clearAllWaterLogs()
+    }
+
+    suspend fun purgeLegacySampleData() {
+        foodLogDao.deleteLegacySampleLogs()
+        waterLogDao.deleteLegacySampleWaterLogs()
+    }
+
     // Water
     fun getWaterLog(date: String): Flow<DailyWaterLog> = waterLogDao.getWaterLogForDate(date).map {
         it ?: DailyWaterLog(date = date, intakeMl = 0)

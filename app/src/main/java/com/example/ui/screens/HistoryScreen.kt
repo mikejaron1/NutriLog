@@ -32,6 +32,7 @@ import androidx.compose.material.icons.filled.LocalDrink
 import androidx.compose.material.icons.filled.LocalFireDepartment
 import androidx.compose.material.icons.filled.StackedBarChart
 import androidx.compose.material.icons.filled.Timeline
+import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.FilterChip
@@ -204,107 +205,148 @@ fun HistoryScreen(
             }
         }
 
-        // Overview KPI Row
-        Row(
-            modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.spacedBy(10.dp)
-        ) {
-            HistoryKpiCard(
-                title = "Avg Calories",
-                value = "$avgCalories",
-                subtitle = "Goal: ${dailyGoal.calorieTarget} kcal",
-                accentColor = CaloriesColor,
-                modifier = Modifier.weight(1f)
-            )
-            HistoryKpiCard(
-                title = "Avg Protein",
-                value = "${avgProtein}g",
-                subtitle = "Goal: ${dailyGoal.proteinTargetGrams}g",
-                accentColor = ProteinColor,
-                modifier = Modifier.weight(1f)
-            )
-            HistoryKpiCard(
-                title = "On-Target",
-                value = "$daysWithinGoal/${activeDays.size.coerceAtLeast(1)}d",
-                subtitle = "Avg H2O: ${avgWater}ml",
-                accentColor = WaterColor,
-                modifier = Modifier.weight(1f)
-            )
-        }
-
         if (activeDays.isEmpty()) {
             Card(
                 modifier = Modifier
                     .fillMaxWidth()
+                    .padding(vertical = 12.dp)
                     .testTag("history_empty_state_card"),
+                shape = RoundedCornerShape(20.dp),
                 colors = CardDefaults.cardColors(
                     containerColor = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.5f)
-                ),
-                shape = RoundedCornerShape(12.dp)
+                )
             ) {
-                Row(
-                    modifier = Modifier.padding(14.dp),
-                    verticalAlignment = Alignment.CenterVertically
+                Column(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(28.dp),
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                    verticalArrangement = Arrangement.spacedBy(14.dp)
                 ) {
-                    Icon(
-                        imageVector = Icons.Default.Timeline,
-                        contentDescription = null,
-                        tint = MaterialTheme.colorScheme.primary,
-                        modifier = Modifier.size(24.dp)
-                    )
-                    Spacer(modifier = Modifier.width(12.dp))
+                    Box(
+                        modifier = Modifier
+                            .size(68.dp)
+                            .background(MaterialTheme.colorScheme.primaryContainer, CircleShape),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        Icon(
+                            imageVector = Icons.Default.Timeline,
+                            contentDescription = null,
+                            tint = MaterialTheme.colorScheme.onPrimaryContainer,
+                            modifier = Modifier.size(36.dp)
+                        )
+                    }
+
                     Text(
-                        text = "Log foods in your Daily Diary to see calorie and macro trends over time.",
-                        style = MaterialTheme.typography.bodySmall,
-                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                        text = "No Nutrition History Yet",
+                        style = MaterialTheme.typography.titleLarge,
+                        fontWeight = FontWeight.Bold,
+                        textAlign = TextAlign.Center
+                    )
+
+                    Text(
+                        text = "You have not entered any meal logs yet. As you record meals in your Daily Diary, your calorie trends, macro breakdowns, and progress charts will appear here automatically.",
+                        style = MaterialTheme.typography.bodyMedium,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant,
+                        textAlign = TextAlign.Center
+                    )
+
+                    Spacer(modifier = Modifier.height(6.dp))
+
+                    Button(
+                        onClick = {
+                            val todayStr = SimpleDateFormat("yyyy-MM-dd", Locale.US).format(Calendar.getInstance().time)
+                            onSelectDateInDiary(todayStr)
+                        },
+                        shape = RoundedCornerShape(12.dp),
+                        modifier = Modifier.testTag("history_go_to_diary_button")
+                    ) {
+                        Icon(
+                            imageVector = Icons.AutoMirrored.Filled.OpenInNew,
+                            contentDescription = null,
+                            modifier = Modifier.size(18.dp)
+                        )
+                        Spacer(modifier = Modifier.width(8.dp))
+                        Text("Open Daily Diary", fontWeight = FontWeight.SemiBold)
+                    }
+                }
+            }
+        } else {
+            // Overview KPI Row
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.spacedBy(10.dp)
+            ) {
+                HistoryKpiCard(
+                    title = "Avg Calories",
+                    value = "$avgCalories",
+                    subtitle = "Goal: ${dailyGoal.calorieTarget} kcal",
+                    accentColor = CaloriesColor,
+                    modifier = Modifier.weight(1f)
+                )
+                HistoryKpiCard(
+                    title = "Avg Protein",
+                    value = "${avgProtein}g",
+                    subtitle = "Goal: ${dailyGoal.proteinTargetGrams}g",
+                    accentColor = ProteinColor,
+                    modifier = Modifier.weight(1f)
+                )
+                HistoryKpiCard(
+                    title = "On-Target",
+                    value = "$daysWithinGoal/${activeDays.size.coerceAtLeast(1)}d",
+                    subtitle = "Avg H2O: ${avgWater}ml",
+                    accentColor = WaterColor,
+                    modifier = Modifier.weight(1f)
+                )
+            }
+
+            // CHART 1: Calories Over Time (Bar Chart / Line Graph + Target Goal Line)
+            CalorieHistoryChartCard(
+                history = dailyHistoryList,
+                calorieGoal = dailyGoal.calorieTarget,
+                selectedIndex = selectedDayIndex.coerceIn(0, (dailyHistoryList.size - 1).coerceAtLeast(0)),
+                isLineChart = calorieChartIsLine,
+                onToggleChartType = { calorieChartIsLine = !calorieChartIsLine },
+                onSelectDay = { selectedDayIndex = it }
+            )
+
+            // CHART 2: Macronutrients Over Time (Multi-Line Trend / Stacked Bar Chart)
+            MacroTrendsChartCard(
+                history = dailyHistoryList,
+                dailyGoal = dailyGoal,
+                isStackedBar = macroChartIsStacked,
+                selectedMacroFilter = selectedMacroFilter,
+                onToggleChartMode = { macroChartIsStacked = !macroChartIsStacked },
+                onSelectMacroFilter = { selectedMacroFilter = it }
+            )
+
+            // CHART 3: Average Macro Caloric Distribution (Donut Chart & Target Comparison)
+            MacroDistributionDonutCard(
+                avgProtein = avgProtein,
+                avgCarbs = avgCarbs,
+                avgFat = avgFat,
+                avgFiber = avgFiber,
+                goal = dailyGoal
+            )
+
+            // Daily Log Breakdown List (Only days with logged food or water)
+            val loggedDays = dailyHistoryList.filter { it.calories > 0 || it.waterMl > 0 }.reversed()
+            if (loggedDays.isNotEmpty()) {
+                Text(
+                    text = "Daily Log Breakdown (${loggedDays.size} days)",
+                    style = MaterialTheme.typography.titleMedium,
+                    fontWeight = FontWeight.Bold,
+                    modifier = Modifier.padding(top = 4.dp)
+                )
+
+                loggedDays.forEach { day ->
+                    DailyHistoryRowCard(
+                        day = day,
+                        goal = dailyGoal,
+                        onClick = { onSelectDateInDiary(day.dateString) }
                     )
                 }
             }
-        }
-
-        // CHART 1: Calories Over Time (Bar Chart / Line Graph + Target Goal Line)
-        CalorieHistoryChartCard(
-            history = dailyHistoryList,
-            calorieGoal = dailyGoal.calorieTarget,
-            selectedIndex = selectedDayIndex.coerceIn(0, (dailyHistoryList.size - 1).coerceAtLeast(0)),
-            isLineChart = calorieChartIsLine,
-            onToggleChartType = { calorieChartIsLine = !calorieChartIsLine },
-            onSelectDay = { selectedDayIndex = it }
-        )
-
-        // CHART 2: Macronutrients Over Time (Multi-Line Trend / Stacked Bar Chart)
-        MacroTrendsChartCard(
-            history = dailyHistoryList,
-            dailyGoal = dailyGoal,
-            isStackedBar = macroChartIsStacked,
-            selectedMacroFilter = selectedMacroFilter,
-            onToggleChartMode = { macroChartIsStacked = !macroChartIsStacked },
-            onSelectMacroFilter = { selectedMacroFilter = it }
-        )
-
-        // CHART 3: Average Macro Caloric Distribution (Donut Chart & Target Comparison)
-        MacroDistributionDonutCard(
-            avgProtein = avgProtein,
-            avgCarbs = avgCarbs,
-            avgFat = avgFat,
-            avgFiber = avgFiber,
-            goal = dailyGoal
-        )
-
-        // Daily Log Breakdown List
-        Text(
-            text = "Daily Log Breakdown",
-            style = MaterialTheme.typography.titleMedium,
-            fontWeight = FontWeight.Bold,
-            modifier = Modifier.padding(top = 4.dp)
-        )
-
-        dailyHistoryList.reversed().forEach { day ->
-            DailyHistoryRowCard(
-                day = day,
-                goal = dailyGoal,
-                onClick = { onSelectDateInDiary(day.dateString) }
-            )
         }
 
         Spacer(modifier = Modifier.height(84.dp))

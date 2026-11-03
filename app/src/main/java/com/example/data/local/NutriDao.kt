@@ -73,6 +73,12 @@ interface FoodLogDao {
 
     @Query("SELECT * FROM food_log_entries WHERE date BETWEEN :startDate AND :endDate ORDER BY date ASC")
     fun getLogsInRange(startDate: String, endDate: String): Flow<List<FoodLogEntry>>
+
+    @Query("DELETE FROM food_log_entries")
+    suspend fun clearAllLogs()
+
+    @Query("DELETE FROM food_log_entries WHERE id LIKE 'sample_%' OR id LIKE 'seed_%' OR id LIKE 'demo_%' OR id LIKE 'test_%'")
+    suspend fun deleteLegacySampleLogs()
 }
 
 @Dao
@@ -88,6 +94,12 @@ interface WaterLogDao {
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertAll(logs: List<DailyWaterLog>)
+
+    @Query("DELETE FROM daily_water_logs")
+    suspend fun clearAllWaterLogs()
+
+    @Query("DELETE FROM daily_water_logs WHERE date LIKE 'sample_%'")
+    suspend fun deleteLegacySampleWaterLogs()
 }
 
 @Dao

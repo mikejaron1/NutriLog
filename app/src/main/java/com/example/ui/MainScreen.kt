@@ -269,7 +269,8 @@ fun MainScreen(viewModel: NutriViewModel) {
                             viewModel.updateGoals(c, p, crb, f, fib, w)
                         },
                         onThemeChange = { viewModel.setThemePreference(it) },
-                        onResetSyncState = { viewModel.resetSyncState() }
+                        onResetSyncState = { viewModel.resetSyncState() },
+                        onClearAllHistory = { viewModel.clearAllHistoryLogs() }
                     )
                 }
             }

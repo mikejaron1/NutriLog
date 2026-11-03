@@ -72,6 +72,15 @@ class NutriViewModel(application: Application) : AndroidViewModel(application) {
                 }
             }
         }
+
+        // Purge any legacy sample/seed data from prior versions automatically
+        viewModelScope.launch {
+            try {
+                repository.purgeLegacySampleData()
+            } catch (e: Exception) {
+                Log.w(TAG, "Failed to purge legacy data", e)
+            }
+        }
     }
 
     override fun onCleared() {
@@ -267,6 +276,16 @@ class NutriViewModel(application: Application) : AndroidViewModel(application) {
                 triggerAutoSyncAfterEntry("Updated favorite: ${foodItem.name}")
             } catch (e: Exception) {
                 Log.e(TAG, "Failed to toggle favorite", e)
+            }
+        }
+    }
+
+    fun clearAllHistoryLogs() {
+        viewModelScope.launch {
+            try {
+                repository.clearAllHistoryLogs()
+            } catch (e: Exception) {
+                Log.e(TAG, "Failed to clear all logs", e)
             }
         }
     }

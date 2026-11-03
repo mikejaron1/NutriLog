@@ -1,4 +1,7 @@
 import com.google.gms.googleservices.GoogleServicesPlugin.MissingGoogleServicesStrategy
+import java.text.SimpleDateFormat
+import java.util.Date
+import java.util.Locale
 
 plugins {
   alias(libs.plugins.android.application)
@@ -16,8 +19,9 @@ android {
     applicationId = "com.aistudio.nutrilog.mkvqtr"
     minSdk = 24
     targetSdk = 36
-    versionCode = 2
-    versionName = "2.0"
+    versionCode = 3
+    versionName = "3.0"
+    buildConfigField("String", "BUILD_TIME", "\"${SimpleDateFormat("MMM d, yyyy • h:mm a", Locale.US).format(Date())}\"")
 
     testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
   }
