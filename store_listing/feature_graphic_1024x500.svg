@@ -1,0 +1,146 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1024 500" width="1024" height="500">
+  <defs>
+    <linearGradient id="bgFeature" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#06160F"/>
+      <stop offset="45%" stop-color="#0B261A"/>
+      <stop offset="100%" stop-color="#14432E"/>
+    </linearGradient>
+    <linearGradient id="cardGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#122A1E"/>
+      <stop offset="100%" stop-color="#1A3B2B"/>
+    </linearGradient>
+    <linearGradient id="accentGreen" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#22C55E"/>
+      <stop offset="100%" stop-color="#10B981"/>
+    </linearGradient>
+    <linearGradient id="accentAmber" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#F59E0B"/>
+      <stop offset="100%" stop-color="#FBBF24"/>
+    </linearGradient>
+    <linearGradient id="accentBlue" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#38BDF8"/>
+      <stop offset="100%" stop-color="#0284C7"/>
+    </linearGradient>
+    <filter id="cardShadow" x="-10%" y="-10%" width="120%" height="120%">
+      <feDropShadow dx="0" dy="18" stdDeviation="24" flood-color="#000000" flood-opacity="0.65"/>
+    </filter>
+  </defs>
+
+  <!-- Background -->
+  <rect width="1024" height="500" fill="url(#bgFeature)"/>
+
+  <!-- Subtle ambient decorative rings in background -->
+  <circle cx="920" cy="120" r="240" fill="none" stroke="#22C55E" stroke-opacity="0.04" stroke-width="40"/>
+  <circle cx="100" cy="460" r="180" fill="none" stroke="#22C55E" stroke-opacity="0.03" stroke-width="30"/>
+
+  <!-- LEFT SECTION: Branding & Value Props -->
+  <!-- App Icon Badge -->
+  <g transform="translate(68, 64)">
+    <rect width="64" height="64" rx="16" fill="#143A29" stroke="#22C55E" stroke-opacity="0.4" stroke-width="2"/>
+    <!-- Leaf Sprout Icon -->
+    <path d="M 32,18 C 32,18 20,28 20,38 C 20,45 25,50 32,50 C 39,50 44,45 44,38 C 44,28 32,18 32,18 Z" fill="#22C55E"/>
+    <path d="M 32,24 C 32,24 24,32 24,38 C 24,42 27,46 32,46 C 37,46 40,42 40,38 C 40,32 32,24 32,24 Z" fill="#143A29"/>
+    <circle cx="32" cy="38" r="4" fill="#4ADE80"/>
+  </g>
+
+  <!-- Title & Subtitle -->
+  <text x="148" y="108" font-family="system-ui, -apple-system, sans-serif" font-size="44" font-weight="800" fill="#FFFFFF" letter-spacing="-0.5">NutriLog</text>
+  <text x="68" y="166" font-family="system-ui, -apple-system, sans-serif" font-size="28" font-weight="700" fill="#E2E8F0">Intelligent Macro &amp; Food Diary</text>
+  <text x="68" y="198" font-family="system-ui, -apple-system, sans-serif" font-size="16" font-weight="400" fill="#94A3B8">Track calories, calculate macros, and sync effortlessly.</text>
+
+  <!-- Feature Value Proposition Pills -->
+  <g transform="translate(68, 235)">
+    <!-- Pill 1: AI Food & Nutrition Label Scanner -->
+    <g transform="translate(0, 0)">
+      <rect width="400" height="42" rx="10" fill="#133123" stroke="#22C55E" stroke-opacity="0.3" stroke-width="1.5"/>
+      <circle cx="24" cy="21" r="9" fill="#22C55E"/>
+      <path d="M 20,21 L 23,24 L 28,18" stroke="#FFFFFF" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+      <text x="44" y="27" font-family="system-ui, -apple-system, sans-serif" font-size="15" font-weight="600" fill="#F1F5F9">AI Recipe &amp; Nutrition Label Scanner</text>
+    </g>
+
+    <!-- Pill 2: Barcode Scanner & Search -->
+    <g transform="translate(0, 52)">
+      <rect width="400" height="42" rx="10" fill="#133123" stroke="#22C55E" stroke-opacity="0.3" stroke-width="1.5"/>
+      <circle cx="24" cy="21" r="9" fill="#22C55E"/>
+      <path d="M 20,21 L 23,24 L 28,18" stroke="#FFFFFF" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+      <text x="44" y="27" font-family="system-ui, -apple-system, sans-serif" font-size="15" font-weight="600" fill="#F1F5F9">Instant Barcode &amp; Web Food Search</text>
+    </g>
+
+    <!-- Pill 3: Wi-Fi Google Drive Auto-Sync -->
+    <g transform="translate(0, 104)">
+      <rect width="400" height="42" rx="10" fill="#133123" stroke="#22C55E" stroke-opacity="0.3" stroke-width="1.5"/>
+      <circle cx="24" cy="21" r="9" fill="#22C55E"/>
+      <path d="M 20,21 L 23,24 L 28,18" stroke="#FFFFFF" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+      <text x="44" y="27" font-family="system-ui, -apple-system, sans-serif" font-size="15" font-weight="600" fill="#F1F5F9">Automatic Wi-Fi Google Drive Sync</text>
+    </g>
+
+    <!-- Pill 4: Private & Local-First -->
+    <g transform="translate(0, 156)">
+      <rect width="400" height="42" rx="10" fill="#133123" stroke="#22C55E" stroke-opacity="0.3" stroke-width="1.5"/>
+      <circle cx="24" cy="21" r="9" fill="#22C55E"/>
+      <path d="M 20,21 L 23,24 L 28,18" stroke="#FFFFFF" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+      <text x="44" y="27" font-family="system-ui, -apple-system, sans-serif" font-size="15" font-weight="600" fill="#F1F5F9">Private, Zero Ads, 100% Offline Ready</text>
+    </g>
+  </g>
+
+  <!-- RIGHT SECTION: App Mockup UI Cards -->
+  <g transform="translate(540, 45)" filter="url(#cardShadow)">
+    <!-- Main Device Card Frame -->
+    <rect width="420" height="410" rx="28" fill="url(#cardGrad)" stroke="#22C55E" stroke-opacity="0.3" stroke-width="2"/>
+
+    <!-- Top Card Bar -->
+    <rect x="24" y="24" width="372" height="175" rx="18" fill="#0C2016" stroke="#FFFFFF" stroke-opacity="0.06"/>
+
+    <!-- Calorie Ring Graphic -->
+    <g transform="translate(100, 110)">
+      <circle cx="0" cy="0" r="54" fill="none" stroke="#FFFFFF" stroke-opacity="0.1" stroke-width="10"/>
+      <!-- Calorie Arc Progress -->
+      <path d="M 0,-54 A 54,54 0 1,1 -48,24" fill="none" stroke="url(#accentGreen)" stroke-width="10" stroke-linecap="round"/>
+      <text x="0" y="-4" font-family="system-ui, -apple-system, sans-serif" font-size="22" font-weight="800" fill="#FFFFFF" text-anchor="middle">1,850</text>
+      <text x="0" y="16" font-family="system-ui, -apple-system, sans-serif" font-size="11" font-weight="600" fill="#94A3B8" text-anchor="middle">kcal left</text>
+    </g>
+
+    <!-- Macro Indicators on right of ring -->
+    <g transform="translate(185, 45)">
+      <!-- Protein -->
+      <text x="0" y="20" font-family="system-ui, -apple-system, sans-serif" font-size="13" font-weight="700" fill="#4ADE80">Protein: 145g / 160g</text>
+      <rect x="0" y="28" width="180" height="8" rx="4" fill="#1E3A2B"/>
+      <rect x="0" y="28" width="162" height="8" rx="4" fill="url(#accentGreen)"/>
+
+      <!-- Carbs -->
+      <text x="0" y="58" font-family="system-ui, -apple-system, sans-serif" font-size="13" font-weight="700" fill="#FBBF24">Carbs: 180g / 220g</text>
+      <rect x="0" y="66" width="180" height="8" rx="4" fill="#1E3A2B"/>
+      <rect x="0" y="66" width="146" height="8" rx="4" fill="url(#accentAmber)"/>
+
+      <!-- Fat -->
+      <text x="0" y="96" font-family="system-ui, -apple-system, sans-serif" font-size="13" font-weight="700" fill="#38BDF8">Fat: 52g / 65g</text>
+      <rect x="0" y="104" width="180" height="8" rx="4" fill="#1E3A2B"/>
+      <rect x="0" y="104" width="144" height="8" rx="4" fill="url(#accentBlue)"/>
+
+      <!-- Water -->
+      <text x="0" y="132" font-family="system-ui, -apple-system, sans-serif" font-size="12" font-weight="600" fill="#94A3B8">Hydration: 2,250 ml / 3,000 ml</text>
+    </g>
+
+    <!-- Food Item Card 1: Breakfast -->
+    <g transform="translate(24, 215)">
+      <rect width="372" height="74" rx="14" fill="#0E2419" stroke="#22C55E" stroke-opacity="0.15"/>
+      <circle cx="36" cy="37" r="18" fill="#163A29"/>
+      <text x="36" y="42" font-size="18" text-anchor="middle">🥣</text>
+      <text x="68" y="32" font-family="system-ui, -apple-system, sans-serif" font-size="15" font-weight="700" fill="#FFFFFF">Rolled Oats &amp; Whey Bowl</text>
+      <text x="68" y="52" font-family="system-ui, -apple-system, sans-serif" font-size="12" font-weight="500" fill="#94A3B8">Breakfast • 380 kcal • 32g P • 48g C</text>
+      <rect x="290" y="24" width="68" height="26" rx="8" fill="#1A4A33"/>
+      <text x="324" y="41" font-family="system-ui, -apple-system, sans-serif" font-size="12" font-weight="700" fill="#4ADE80" text-anchor="middle">Logged</text>
+    </g>
+
+    <!-- Food Item Card 2: Lunch -->
+    <g transform="translate(24, 302)">
+      <rect width="372" height="74" rx="14" fill="#0E2419" stroke="#22C55E" stroke-opacity="0.15"/>
+      <circle cx="36" cy="37" r="18" fill="#163A29"/>
+      <text x="36" y="42" font-size="18" text-anchor="middle">🥗</text>
+      <text x="68" y="32" font-family="system-ui, -apple-system, sans-serif" font-size="15" font-weight="700" fill="#FFFFFF">Grilled Salmon &amp; Quinoa Salad</text>
+      <text x="68" y="52" font-family="system-ui, -apple-system, sans-serif" font-size="12" font-weight="500" fill="#94A3B8">Lunch • 640 kcal • 44g P • 38g C</text>
+      <rect x="290" y="24" width="68" height="26" rx="8" fill="#1A4A33"/>
+      <text x="324" y="41" font-family="system-ui, -apple-system, sans-serif" font-size="12" font-weight="700" fill="#4ADE80" text-anchor="middle">Logged</text>
+    </g>
+  </g>
+</svg>

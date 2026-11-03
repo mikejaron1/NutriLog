@@ -1,0 +1,152 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1080 1920" width="1080" height="1920">
+  <defs>
+    <linearGradient id="screenBg" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#0B130E"/>
+      <stop offset="100%" stop-color="#050B08"/>
+    </linearGradient>
+    <linearGradient id="cardBg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#12251A"/>
+      <stop offset="100%" stop-color="#183223"/>
+    </linearGradient>
+    <linearGradient id="ringGreen" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#22C55E"/>
+      <stop offset="100%" stop-color="#10B981"/>
+    </linearGradient>
+  </defs>
+
+  <!-- Background -->
+  <rect width="1080" height="1920" fill="url(#screenBg)"/>
+
+  <!-- Top Marketing Banner Header -->
+  <rect width="1080" height="180" fill="#0E281C"/>
+  <text x="540" y="80" font-family="system-ui, -apple-system, sans-serif" font-size="34" font-weight="800" fill="#22C55E" text-anchor="middle" letter-spacing="1.5">DAILY FOOD DIARY &amp; MACRO GOALS</text>
+  <text x="540" y="130" font-family="system-ui, -apple-system, sans-serif" font-size="24" font-weight="500" fill="#E2E8F0" text-anchor="middle">Effortlessly balance calories, protein, carbs, and fats</text>
+
+  <!-- Status Bar -->
+  <text x="64" y="225" font-family="system-ui, -apple-system, sans-serif" font-size="20" font-weight="600" fill="#94A3B8">9:41</text>
+  <text x="1016" y="225" font-family="system-ui, -apple-system, sans-serif" font-size="20" font-weight="600" fill="#94A3B8" text-anchor="end">100% 📶</text>
+
+  <!-- App Header -->
+  <g transform="translate(64, 260)">
+    <rect width="52" height="52" rx="14" fill="#1B422D"/>
+    <path d="M 26,14 C 26,14 16,22 16,30 C 16,36 20,40 26,40 C 32,40 36,36 36,30 C 36,22 26,14 26,14 Z" fill="#22C55E"/>
+    <text x="70" y="38" font-family="system-ui, -apple-system, sans-serif" font-size="34" font-weight="800" fill="#FFFFFF">NutriLog</text>
+    <!-- Date pill -->
+    <rect x="680" y="4" width="272" height="44" rx="22" fill="#133121" stroke="#22C55E" stroke-opacity="0.3"/>
+    <text x="816" y="33" font-family="system-ui, -apple-system, sans-serif" font-size="18" font-weight="700" fill="#4ADE80" text-anchor="middle">📅 Today, Nov 3</text>
+  </g>
+
+  <!-- Calorie & Macro Target Ring Hero Card -->
+  <g transform="translate(64, 345)">
+    <rect width="952" height="380" rx="28" fill="url(#cardBg)" stroke="#22C55E" stroke-opacity="0.3" stroke-width="2"/>
+
+    <!-- Calorie Center Ring -->
+    <g transform="translate(210, 190)">
+      <circle cx="0" cy="0" r="110" fill="none" stroke="#FFFFFF" stroke-opacity="0.08" stroke-width="20"/>
+      <path d="M 0,-110 A 110,110 0 1,1 -95,55" fill="none" stroke="url(#ringGreen)" stroke-width="20" stroke-linecap="round"/>
+      <text x="0" y="-12" font-family="system-ui, -apple-system, sans-serif" font-size="48" font-weight="800" fill="#FFFFFF" text-anchor="middle">1,640</text>
+      <text x="0" y="24" font-family="system-ui, -apple-system, sans-serif" font-size="18" font-weight="600" fill="#94A3B8" text-anchor="middle">kcal remaining</text>
+      <text x="0" y="52" font-family="system-ui, -apple-system, sans-serif" font-size="16" font-weight="600" fill="#4ADE80" text-anchor="middle">Goal: 2,400 kcal</text>
+    </g>
+
+    <!-- Macro Breakdown Bars -->
+    <g transform="translate(420, 60)">
+      <!-- Protein -->
+      <text x="0" y="30" font-family="system-ui, -apple-system, sans-serif" font-size="22" font-weight="700" fill="#4ADE80">Protein: 142g / 170g</text>
+      <rect x="0" y="44" width="470" height="16" rx="8" fill="#0C1B13"/>
+      <rect x="0" y="44" width="392" height="16" rx="8" fill="#22C55E"/>
+      <text x="470" y="30" font-family="system-ui, -apple-system, sans-serif" font-size="18" font-weight="700" fill="#94A3B8" text-anchor="end">84%</text>
+
+      <!-- Carbs -->
+      <text x="0" y="110" font-family="system-ui, -apple-system, sans-serif" font-size="22" font-weight="700" fill="#FBBF24">Carbohydrates: 185g / 240g</text>
+      <rect x="0" y="124" width="470" height="16" rx="8" fill="#0C1B13"/>
+      <rect x="0" y="124" width="362" height="16" rx="8" fill="#F59E0B"/>
+      <text x="470" y="110" font-family="system-ui, -apple-system, sans-serif" font-size="18" font-weight="700" fill="#94A3B8" text-anchor="end">77%</text>
+
+      <!-- Fat -->
+      <text x="0" y="190" font-family="system-ui, -apple-system, sans-serif" font-size="22" font-weight="700" fill="#38BDF8">Healthy Fats: 48g / 65g</text>
+      <rect x="0" y="204" width="470" height="16" rx="8" fill="#0C1B13"/>
+      <rect x="0" y="204" width="347" height="16" rx="8" fill="#38BDF8"/>
+      <text x="470" y="190" font-family="system-ui, -apple-system, sans-serif" font-size="18" font-weight="700" fill="#94A3B8" text-anchor="end">74%</text>
+
+      <!-- Fiber -->
+      <text x="0" y="258" font-family="system-ui, -apple-system, sans-serif" font-size="18" font-weight="600" fill="#C084FC">Dietary Fiber: 28g / 32g • 88%</text>
+    </g>
+  </g>
+
+  <!-- Water Hydration Card -->
+  <g transform="translate(64, 755)">
+    <rect width="952" height="140" rx="20" fill="#0E2319" stroke="#38BDF8" stroke-opacity="0.3" stroke-width="1.5"/>
+    <circle cx="64" cy="70" r="32" fill="#0C3446"/>
+    <text x="64" y="80" font-size="34" text-anchor="middle">💧</text>
+    <text x="120" y="58" font-family="system-ui, -apple-system, sans-serif" font-size="24" font-weight="700" fill="#FFFFFF">Daily Hydration Track</text>
+    <text x="120" y="92" font-family="system-ui, -apple-system, sans-serif" font-size="18" font-weight="500" fill="#94A3B8">2,250 ml logged (Goal: 3,000 ml)</text>
+    <!-- Quick Add Pills -->
+    <rect x="710" y="44" width="100" height="52" rx="16" fill="#144A63"/>
+    <text x="760" y="77" font-family="system-ui, -apple-system, sans-serif" font-size="20" font-weight="700" fill="#38BDF8" text-anchor="middle">+250ml</text>
+    <rect x="826" y="44" width="100" height="52" rx="16" fill="#144A63"/>
+    <text x="876" y="77" font-family="system-ui, -apple-system, sans-serif" font-size="20" font-weight="700" fill="#38BDF8" text-anchor="middle">+500ml</text>
+  </g>
+
+  <!-- MEAL SECTION: Breakfast -->
+  <g transform="translate(64, 925)">
+    <text x="0" y="32" font-family="system-ui, -apple-system, sans-serif" font-size="26" font-weight="700" fill="#FFFFFF">Breakfast</text>
+    <text x="952" y="32" font-family="system-ui, -apple-system, sans-serif" font-size="22" font-weight="700" fill="#22C55E" text-anchor="end">410 kcal</text>
+
+    <!-- Breakfast Item 1 -->
+    <rect y="48" width="952" height="110" rx="18" fill="#12251B" stroke="#FFFFFF" stroke-opacity="0.06"/>
+    <text x="32" y="98" font-family="system-ui, -apple-system, sans-serif" font-size="22" font-weight="700" fill="#FFFFFF">Organic Rolled Oats with Blueberries</text>
+    <text x="32" y="132" font-family="system-ui, -apple-system, sans-serif" font-size="17" font-weight="500" fill="#94A3B8">1 bowl (70g) • 260 kcal • 9g P • 46g C • 4g F</text>
+    <text x="920" y="112" font-family="system-ui, -apple-system, sans-serif" font-size="22" font-weight="700" fill="#E2E8F0" text-anchor="end">260 kcal</text>
+
+    <!-- Breakfast Item 2 -->
+    <rect y="172" width="952" height="110" rx="18" fill="#12251B" stroke="#FFFFFF" stroke-opacity="0.06"/>
+    <text x="32" y="222" font-family="system-ui, -apple-system, sans-serif" font-size="22" font-weight="700" fill="#FFFFFF">Nonfat Greek Yogurt</text>
+    <text x="32" y="256" font-family="system-ui, -apple-system, sans-serif" font-size="17" font-weight="500" fill="#94A3B8">1 cup (170g) • 150 kcal • 23g P • 6g C • 0g F</text>
+    <text x="920" y="236" font-family="system-ui, -apple-system, sans-serif" font-size="22" font-weight="700" fill="#E2E8F0" text-anchor="end">150 kcal</text>
+  </g>
+
+  <!-- MEAL SECTION: Lunch -->
+  <g transform="translate(64, 1250)">
+    <text x="0" y="32" font-family="system-ui, -apple-system, sans-serif" font-size="26" font-weight="700" fill="#FFFFFF">Lunch</text>
+    <text x="952" y="32" font-family="system-ui, -apple-system, sans-serif" font-size="22" font-weight="700" fill="#22C55E" text-anchor="end">680 kcal</text>
+
+    <!-- Lunch Item -->
+    <rect y="48" width="952" height="110" rx="18" fill="#12251B" stroke="#FFFFFF" stroke-opacity="0.06"/>
+    <text x="32" y="98" font-family="system-ui, -apple-system, sans-serif" font-size="22" font-weight="700" fill="#FFFFFF">Wild Atlantic Salmon Bowl &amp; Quinoa</text>
+    <text x="32" y="132" font-family="system-ui, -apple-system, sans-serif" font-size="17" font-weight="500" fill="#94A3B8">1 plate (380g) • 680 kcal • 48g P • 52g C • 22g F</text>
+    <text x="920" y="112" font-family="system-ui, -apple-system, sans-serif" font-size="22" font-weight="700" fill="#E2E8F0" text-anchor="end">680 kcal</text>
+  </g>
+
+  <!-- FAB: Add Food Button -->
+  <g transform="translate(760, 1620)">
+    <rect width="256" height="74" rx="37" fill="#22C55E" filter="url(#glow)"/>
+    <text x="128" y="46" font-family="system-ui, -apple-system, sans-serif" font-size="22" font-weight="800" fill="#042111" text-anchor="middle">+ Log Meal</text>
+  </g>
+
+  <!-- Bottom Navigation Bar -->
+  <g transform="translate(0, 1780)">
+    <rect width="1080" height="140" fill="#0B1A12" stroke="#FFFFFF" stroke-opacity="0.08"/>
+    <!-- Tab 1: Diary (Active) -->
+    <g transform="translate(135, 30)">
+      <circle cx="0" cy="20" r="26" fill="#153E2A"/>
+      <text x="0" y="28" font-size="24" text-anchor="middle">📖</text>
+      <text x="0" y="66" font-family="system-ui, -apple-system, sans-serif" font-size="16" font-weight="700" fill="#22C55E" text-anchor="middle">Diary</text>
+    </g>
+    <!-- Tab 2: History -->
+    <g transform="translate(405, 30)">
+      <text x="0" y="28" font-size="24" text-anchor="middle">📊</text>
+      <text x="0" y="66" font-family="system-ui, -apple-system, sans-serif" font-size="16" font-weight="500" fill="#94A3B8" text-anchor="middle">History</text>
+    </g>
+    <!-- Tab 3: Insights -->
+    <g transform="translate(675, 30)">
+      <text x="0" y="28" font-size="24" text-anchor="middle">✨</text>
+      <text x="0" y="66" font-family="system-ui, -apple-system, sans-serif" font-size="16" font-weight="500" fill="#94A3B8" text-anchor="middle">AI Insights</text>
+    </g>
+    <!-- Tab 4: Settings & Sync -->
+    <g transform="translate(945, 30)">
+      <text x="0" y="28" font-size="24" text-anchor="middle">⚙️</text>
+      <text x="0" y="66" font-family="system-ui, -apple-system, sans-serif" font-size="16" font-weight="500" fill="#94A3B8" text-anchor="middle">Settings</text>
+    </g>
+  </g>
+</svg>

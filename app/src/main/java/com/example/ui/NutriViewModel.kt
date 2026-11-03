@@ -58,14 +58,6 @@ class NutriViewModel(application: Application) : AndroidViewModel(application) {
     val autoSyncState: StateFlow<AutoSyncUiState> = repository.autoSyncState
 
     init {
-        viewModelScope.launch {
-            try {
-                repository.seedPastDaysHistoryIfEmpty()
-            } catch (e: Exception) {
-                Log.e(TAG, "Error seeding past days history", e)
-            }
-        }
-
         // Observe real-time Wi-Fi state & hold mode, and flush any pending queue if on Wi-Fi
         viewModelScope.launch {
             combine(
@@ -189,15 +181,6 @@ class NutriViewModel(application: Application) : AndroidViewModel(application) {
         _selectedDate.value = getTodayDateString()
     }
 
-    fun seedSampleWeekHistory() {
-        viewModelScope.launch {
-            try {
-                repository.seedPastDaysHistoryIfEmpty()
-            } catch (e: Exception) {
-                Log.e(TAG, "Failed to seed sample history", e)
-            }
-        }
-    }
 
     // Automatic Wi-Fi Google Drive Sync Trigger after ANY entry
     private suspend fun triggerAutoSyncAfterEntry(entryDescription: String) {

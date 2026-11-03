@@ -231,8 +231,7 @@ fun MainScreen(viewModel: NutriViewModel) {
                         onSelectDateInDiary = { dateStr ->
                             viewModel.setDate(dateStr)
                             currentTab = 0
-                        },
-                        onSeedSampleHistory = { viewModel.seedSampleWeekHistory() }
+                        }
                     )
                     2 -> InsightsScreen(
                         displayDate = displayDate,

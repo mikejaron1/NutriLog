@@ -1,0 +1,218 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1080 1920" width="1080" height="1920">
+  <defs>
+    <linearGradient id="histBg" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#07140D"/>
+      <stop offset="100%" stop-color="#040A07"/>
+    </linearGradient>
+    <linearGradient id="chartCardBg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#10251A"/>
+      <stop offset="100%" stop-color="#153322"/>
+    </linearGradient>
+    <linearGradient id="barGreen" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#4ADE80"/>
+      <stop offset="100%" stop-color="#16A34A"/>
+    </linearGradient>
+    <linearGradient id="barBlue" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#38BDF8"/>
+      <stop offset="100%" stop-color="#0284C7"/>
+    </linearGradient>
+  </defs>
+
+  <!-- Background -->
+  <rect width="1080" height="1920" fill="url(#histBg)"/>
+
+  <!-- Top Marketing Banner Header -->
+  <rect width="1080" height="180" fill="#0C251A"/>
+  <text x="540" y="80" font-family="system-ui, -apple-system, sans-serif" font-size="34" font-weight="800" fill="#22C55E" text-anchor="middle" letter-spacing="1.5">NUTRITION &amp; MACRO ANALYTICS</text>
+  <text x="540" y="130" font-family="system-ui, -apple-system, sans-serif" font-size="24" font-weight="500" fill="#E2E8F0" text-anchor="middle">Track progress with multi-day calorie and macro trends</text>
+
+  <!-- Status Bar -->
+  <text x="64" y="225" font-family="system-ui, -apple-system, sans-serif" font-size="20" font-weight="600" fill="#94A3B8">9:41</text>
+  <text x="1016" y="225" font-family="system-ui, -apple-system, sans-serif" font-size="20" font-weight="600" fill="#94A3B8" text-anchor="end">100% 📶</text>
+
+  <!-- Header & Range Pills -->
+  <g transform="translate(64, 260)">
+    <text x="0" y="38" font-family="system-ui, -apple-system, sans-serif" font-size="34" font-weight="800" fill="#FFFFFF">Nutrition History</text>
+    <text x="0" y="68" font-family="system-ui, -apple-system, sans-serif" font-size="18" font-weight="500" fill="#94A3B8">Calorie &amp; macro consistency over time</text>
+
+    <!-- Range Selector Pills: 7D, 14D, 30D -->
+    <g transform="translate(650, 10)">
+      <rect x="0" y="0" width="90" height="48" rx="24" fill="#22C55E"/>
+      <text x="45" y="31" font-family="system-ui, -apple-system, sans-serif" font-size="18" font-weight="800" fill="#042111" text-anchor="middle">7D</text>
+
+      <rect x="100" y="0" width="90" height="48" rx="24" fill="#132B1F" stroke="#22C55E" stroke-opacity="0.3"/>
+      <text x="145" y="31" font-family="system-ui, -apple-system, sans-serif" font-size="18" font-weight="700" fill="#94A3B8" text-anchor="middle">14D</text>
+
+      <rect x="200" y="0" width="90" height="48" rx="24" fill="#132B1F" stroke="#22C55E" stroke-opacity="0.3"/>
+      <text x="245" y="31" font-family="system-ui, -apple-system, sans-serif" font-size="18" font-weight="700" fill="#94A3B8" text-anchor="middle">30D</text>
+    </g>
+  </g>
+
+  <!-- 4 KPI Summary Cards Row -->
+  <g transform="translate(64, 360)">
+    <!-- KPI 1: Avg Calories -->
+    <rect x="0" y="0" width="220" height="120" rx="18" fill="url(#chartCardBg)" stroke="#22C55E" stroke-opacity="0.25"/>
+    <text x="20" y="38" font-family="system-ui, -apple-system, sans-serif" font-size="15" font-weight="600" fill="#94A3B8">Avg Calories</text>
+    <text x="20" y="80" font-family="system-ui, -apple-system, sans-serif" font-size="30" font-weight="800" fill="#FFFFFF">2,140</text>
+    <text x="20" y="104" font-family="system-ui, -apple-system, sans-serif" font-size="13" font-weight="600" fill="#4ADE80">Target: 2,200</text>
+
+    <!-- KPI 2: Avg Protein -->
+    <rect x="244" y="0" width="220" height="120" rx="18" fill="url(#chartCardBg)" stroke="#22C55E" stroke-opacity="0.25"/>
+    <text x="264" y="38" font-family="system-ui, -apple-system, sans-serif" font-size="15" font-weight="600" fill="#94A3B8">Avg Protein</text>
+    <text x="264" y="80" font-family="system-ui, -apple-system, sans-serif" font-size="30" font-weight="800" fill="#4ADE80">154g</text>
+    <text x="264" y="104" font-family="system-ui, -apple-system, sans-serif" font-size="13" font-weight="600" fill="#94A3B8">Goal: 160g</text>
+
+    <!-- KPI 3: On Target Days -->
+    <rect x="488" y="0" width="220" height="120" rx="18" fill="url(#chartCardBg)" stroke="#22C55E" stroke-opacity="0.25"/>
+    <text x="508" y="38" font-family="system-ui, -apple-system, sans-serif" font-size="15" font-weight="600" fill="#94A3B8">On Target</text>
+    <text x="508" y="80" font-family="system-ui, -apple-system, sans-serif" font-size="30" font-weight="800" fill="#FBBF24">6 / 7d</text>
+    <text x="508" y="104" font-family="system-ui, -apple-system, sans-serif" font-size="13" font-weight="600" fill="#4ADE80">86% Compliance</text>
+
+    <!-- KPI 4: Avg Water -->
+    <rect x="732" y="0" width="220" height="120" rx="18" fill="url(#chartCardBg)" stroke="#38BDF8" stroke-opacity="0.25"/>
+    <text x="752" y="38" font-family="system-ui, -apple-system, sans-serif" font-size="15" font-weight="600" fill="#94A3B8">Avg Water</text>
+    <text x="752" y="80" font-family="system-ui, -apple-system, sans-serif" font-size="30" font-weight="800" fill="#38BDF8">2,480</text>
+    <text x="752" y="104" font-family="system-ui, -apple-system, sans-serif" font-size="13" font-weight="600" fill="#94A3B8">ml per day</text>
+  </g>
+
+  <!-- CHART 1: Calories Over Time (Bar Chart) -->
+  <g transform="translate(64, 510)">
+    <rect width="952" height="490" rx="28" fill="url(#chartCardBg)" stroke="#22C55E" stroke-opacity="0.3" stroke-width="1.5"/>
+
+    <text x="36" y="52" font-family="system-ui, -apple-system, sans-serif" font-size="24" font-weight="700" fill="#FFFFFF">Daily Calorie Intake (kcal)</text>
+    <text x="36" y="80" font-family="system-ui, -apple-system, sans-serif" font-size="16" font-weight="500" fill="#94A3B8">Red dashed line shows your daily goal (2,200 kcal)</text>
+
+    <!-- Chart Canvas Area -->
+    <g transform="translate(80, 110)">
+      <!-- Target Goal Line (2,200 kcal) -->
+      <line x1="0" y1="120" x2="800" y2="120" stroke="#EF4444" stroke-width="3" stroke-dasharray="8,6"/>
+      <text x="800" y="112" font-family="system-ui, -apple-system, sans-serif" font-size="14" font-weight="700" fill="#EF4444" text-anchor="end">Goal: 2,200</text>
+
+      <!-- Grid lines -->
+      <line x1="0" y1="50" x2="800" y2="50" stroke="#FFFFFF" stroke-opacity="0.05"/>
+      <line x1="0" y1="190" x2="800" y2="190" stroke="#FFFFFF" stroke-opacity="0.05"/>
+      <line x1="0" y1="260" x2="800" y2="260" stroke="#FFFFFF" stroke-opacity="0.05"/>
+
+      <!-- 7 Bars for past 7 days -->
+      <!-- Day 1 (Tue): 2,150 -->
+      <rect x="20" y="126" width="60" height="164" rx="8" fill="url(#barGreen)"/>
+      <text x="50" y="116" font-family="system-ui, sans-serif" font-size="14" font-weight="700" fill="#E2E8F0" text-anchor="middle">2,150</text>
+      <text x="50" y="318" font-family="system-ui, sans-serif" font-size="16" font-weight="600" fill="#94A3B8" text-anchor="middle">Tue</text>
+
+      <!-- Day 2 (Wed): 2,280 -->
+      <rect x="135" y="110" width="60" height="180" rx="8" fill="url(#barGreen)"/>
+      <text x="165" y="100" font-family="system-ui, sans-serif" font-size="14" font-weight="700" fill="#E2E8F0" text-anchor="middle">2,280</text>
+      <text x="165" y="318" font-family="system-ui, sans-serif" font-size="16" font-weight="600" fill="#94A3B8" text-anchor="middle">Wed</text>
+
+      <!-- Day 3 (Thu): 2,090 -->
+      <rect x="250" y="135" width="60" height="155" rx="8" fill="url(#barGreen)"/>
+      <text x="280" y="125" font-family="system-ui, sans-serif" font-size="14" font-weight="700" fill="#E2E8F0" text-anchor="middle">2,090</text>
+      <text x="280" y="318" font-family="system-ui, sans-serif" font-size="16" font-weight="600" fill="#94A3B8" text-anchor="middle">Thu</text>
+
+      <!-- Day 4 (Fri): 2,340 -->
+      <rect x="365" y="100" width="60" height="190" rx="8" fill="url(#barGreen)"/>
+      <text x="395" y="90" font-family="system-ui, sans-serif" font-size="14" font-weight="700" fill="#E2E8F0" text-anchor="middle">2,340</text>
+      <text x="395" y="318" font-family="system-ui, sans-serif" font-size="16" font-weight="600" fill="#94A3B8" text-anchor="middle">Fri</text>
+
+      <!-- Day 5 (Sat): 2,190 -->
+      <rect x="480" y="122" width="60" height="168" rx="8" fill="url(#barGreen)"/>
+      <text x="510" y="112" font-family="system-ui, sans-serif" font-size="14" font-weight="700" fill="#E2E8F0" text-anchor="middle">2,190</text>
+      <text x="510" y="318" font-family="system-ui, sans-serif" font-size="16" font-weight="600" fill="#94A3B8" text-anchor="middle">Sat</text>
+
+      <!-- Day 6 (Sun): 2,120 -->
+      <rect x="595" y="132" width="60" height="158" rx="8" fill="url(#barGreen)"/>
+      <text x="625" y="122" font-family="system-ui, sans-serif" font-size="14" font-weight="700" fill="#E2E8F0" text-anchor="middle">2,120</text>
+      <text x="625" y="318" font-family="system-ui, sans-serif" font-size="16" font-weight="600" fill="#94A3B8" text-anchor="middle">Sun</text>
+
+      <!-- Day 7 (Today / Mon): 1,840 -->
+      <rect x="710" y="165" width="60" height="125" rx="8" fill="#22C55E"/>
+      <text x="740" y="155" font-family="system-ui, sans-serif" font-size="14" font-weight="700" fill="#4ADE80" text-anchor="middle">1,840</text>
+      <text x="740" y="318" font-family="system-ui, sans-serif" font-size="16" font-weight="700" fill="#4ADE80" text-anchor="middle">Today</text>
+    </g>
+  </g>
+
+  <!-- CHART 2: Macronutrient Trends Over Time (Stacked Ratio) -->
+  <g transform="translate(64, 1030)">
+    <rect width="952" height="480" rx="28" fill="url(#chartCardBg)" stroke="#22C55E" stroke-opacity="0.3" stroke-width="1.5"/>
+
+    <text x="36" y="52" font-family="system-ui, -apple-system, sans-serif" font-size="24" font-weight="700" fill="#FFFFFF">Macronutrient Distribution</text>
+    <!-- Legend -->
+    <g transform="translate(560, 32)">
+      <circle cx="10" cy="12" r="7" fill="#22C55E"/>
+      <text x="24" y="17" font-family="system-ui, sans-serif" font-size="14" font-weight="600" fill="#E2E8F0">Protein</text>
+      <circle cx="110" cy="12" r="7" fill="#F59E0B"/>
+      <text x="124" y="17" font-family="system-ui, sans-serif" font-size="14" font-weight="600" fill="#E2E8F0">Carbs</text>
+      <circle cx="210" cy="12" r="7" fill="#38BDF8"/>
+      <text x="224" y="17" font-family="system-ui, sans-serif" font-size="14" font-weight="600" fill="#E2E8F0">Fat</text>
+    </g>
+
+    <!-- Stacked Macro Bars Canvas -->
+    <g transform="translate(80, 110)">
+      <!-- 7 Stacked Bars -->
+      <!-- Repeat 7 days stacked composition -->
+      <!-- Day 1 -->
+      <rect x="20" y="190" width="60" height="90" rx="4" fill="#38BDF8"/>
+      <rect x="20" y="80" width="60" height="110" rx="4" fill="#F59E0B"/>
+      <rect x="20" y="0" width="60" height="80" rx="4" fill="#22C55E"/>
+      <text x="50" y="318" font-family="system-ui, sans-serif" font-size="16" font-weight="600" fill="#94A3B8" text-anchor="middle">Tue</text>
+
+      <!-- Day 2 -->
+      <rect x="135" y="180" width="60" height="100" rx="4" fill="#38BDF8"/>
+      <rect x="135" y="70" width="60" height="110" rx="4" fill="#F59E0B"/>
+      <rect x="135" y="0" width="60" height="70" rx="4" fill="#22C55E"/>
+      <text x="165" y="318" font-family="system-ui, sans-serif" font-size="16" font-weight="600" fill="#94A3B8" text-anchor="middle">Wed</text>
+
+      <!-- Day 3 -->
+      <rect x="250" y="195" width="60" height="85" rx="4" fill="#38BDF8"/>
+      <rect x="250" y="85" width="60" height="110" rx="4" fill="#F59E0B"/>
+      <rect x="250" y="0" width="60" height="85" rx="4" fill="#22C55E"/>
+      <text x="280" y="318" font-family="system-ui, sans-serif" font-size="16" font-weight="600" fill="#94A3B8" text-anchor="middle">Thu</text>
+
+      <!-- Day 4 -->
+      <rect x="365" y="175" width="60" height="105" rx="4" fill="#38BDF8"/>
+      <rect x="365" y="75" width="60" height="100" rx="4" fill="#F59E0B"/>
+      <rect x="365" y="0" width="60" height="75" rx="4" fill="#22C55E"/>
+      <text x="395" y="318" font-family="system-ui, sans-serif" font-size="16" font-weight="600" fill="#94A3B8" text-anchor="middle">Fri</text>
+
+      <!-- Day 5 -->
+      <rect x="480" y="190" width="60" height="90" rx="4" fill="#38BDF8"/>
+      <rect x="480" y="80" width="60" height="110" rx="4" fill="#F59E0B"/>
+      <rect x="480" y="0" width="60" height="80" rx="4" fill="#22C55E"/>
+      <text x="510" y="318" font-family="system-ui, sans-serif" font-size="16" font-weight="600" fill="#94A3B8" text-anchor="middle">Sat</text>
+
+      <!-- Day 6 -->
+      <rect x="595" y="185" width="60" height="95" rx="4" fill="#38BDF8"/>
+      <rect x="595" y="85" width="60" height="100" rx="4" fill="#F59E0B"/>
+      <rect x="595" y="0" width="60" height="85" rx="4" fill="#22C55E"/>
+      <text x="625" y="318" font-family="system-ui, sans-serif" font-size="16" font-weight="600" fill="#94A3B8" text-anchor="middle">Sun</text>
+
+      <!-- Day 7 (Today) -->
+      <rect x="710" y="190" width="60" height="90" rx="4" fill="#38BDF8"/>
+      <rect x="710" y="80" width="60" height="110" rx="4" fill="#F59E0B"/>
+      <rect x="710" y="0" width="60" height="80" rx="4" fill="#22C55E"/>
+      <text x="740" y="318" font-family="system-ui, sans-serif" font-size="16" font-weight="700" fill="#4ADE80" text-anchor="middle">Today</text>
+    </g>
+  </g>
+
+  <!-- Bottom Navigation Bar -->
+  <g transform="translate(0, 1780)">
+    <rect width="1080" height="140" fill="#0B1A12" stroke="#FFFFFF" stroke-opacity="0.08"/>
+    <g transform="translate(135, 30)">
+      <text x="0" y="28" font-size="24" text-anchor="middle">📖</text>
+      <text x="0" y="66" font-family="system-ui, -apple-system, sans-serif" font-size="16" font-weight="500" fill="#94A3B8" text-anchor="middle">Diary</text>
+    </g>
+    <g transform="translate(405, 30)">
+      <circle cx="0" cy="20" r="26" fill="#153E2A"/>
+      <text x="0" y="28" font-size="24" text-anchor="middle">📊</text>
+      <text x="0" y="66" font-family="system-ui, -apple-system, sans-serif" font-size="16" font-weight="700" fill="#22C55E" text-anchor="middle">History</text>
+    </g>
+    <g transform="translate(675, 30)">
+      <text x="0" y="28" font-size="24" text-anchor="middle">✨</text>
+      <text x="0" y="66" font-family="system-ui, -apple-system, sans-serif" font-size="16" font-weight="500" fill="#94A3B8" text-anchor="middle">AI Insights</text>
+    </g>
+    <g transform="translate(945, 30)">
+      <text x="0" y="28" font-size="24" text-anchor="middle">⚙️</text>
+      <text x="0" y="66" font-family="system-ui, -apple-system, sans-serif" font-size="16" font-weight="500" fill="#94A3B8" text-anchor="middle">Settings</text>
+    </g>
+  </g>
+</svg>

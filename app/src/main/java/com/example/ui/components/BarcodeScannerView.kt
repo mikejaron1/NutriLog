@@ -255,43 +255,6 @@ fun BarcodeScannerSheet(
 
                     Spacer(modifier = Modifier.height(12.dp))
 
-                    // Quick test presets for emulators
-                    Card(
-                        modifier = Modifier.fillMaxWidth(),
-                        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceVariant)
-                    ) {
-                        Column(modifier = Modifier.padding(12.dp)) {
-                            Text(
-                                "Quick Test Barcodes (Demo):",
-                                style = MaterialTheme.typography.labelMedium,
-                                fontWeight = FontWeight.Bold
-                            )
-                            Spacer(modifier = Modifier.height(6.dp))
-                            Row(
-                                modifier = Modifier.fillMaxWidth(),
-                                horizontalArrangement = Arrangement.spacedBy(8.dp)
-                            ) {
-                                OutlinedButton(
-                                    onClick = { manualBarcodeText = "737628064502" },
-                                    modifier = Modifier.weight(1f)
-                                ) {
-                                    Text("Noodles", style = MaterialTheme.typography.labelSmall)
-                                }
-                                OutlinedButton(
-                                    onClick = { manualBarcodeText = "04963406" },
-                                    modifier = Modifier.weight(1f)
-                                ) {
-                                    Text("Soda Can", style = MaterialTheme.typography.labelSmall)
-                                }
-                                OutlinedButton(
-                                    onClick = { manualBarcodeText = "028400070560" },
-                                    modifier = Modifier.weight(1f)
-                                ) {
-                                    Text("Chips", style = MaterialTheme.typography.labelSmall)
-                                }
-                            }
-                        }
-                    }
 
                     if (!hasCameraPermission) {
                         Spacer(modifier = Modifier.height(16.dp))

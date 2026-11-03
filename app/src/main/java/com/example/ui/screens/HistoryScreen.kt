@@ -99,7 +99,6 @@ fun HistoryScreen(
     allWaterLogs: List<DailyWaterLog>,
     dailyGoal: DailyGoal,
     onSelectDateInDiary: (String) -> Unit,
-    onSeedSampleHistory: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     var selectedDaysRange by remember { mutableIntStateOf(7) } // 7, 14, 30
@@ -233,18 +232,33 @@ fun HistoryScreen(
             )
         }
 
-        // If fewer than 2 days logged, offer quick sample seed
-        if (activeDays.size < 2) {
-            OutlinedButton(
-                onClick = onSeedSampleHistory,
+        if (activeDays.isEmpty()) {
+            Card(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .testTag("seed_sample_history_button"),
+                    .testTag("history_empty_state_card"),
+                colors = CardDefaults.cardColors(
+                    containerColor = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.5f)
+                ),
                 shape = RoundedCornerShape(12.dp)
             ) {
-                Icon(Icons.Default.Timeline, contentDescription = null, modifier = Modifier.size(18.dp))
-                Spacer(modifier = Modifier.width(8.dp))
-                Text("Load Sample 7-Day Nutrition History")
+                Row(
+                    modifier = Modifier.padding(14.dp),
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Icon(
+                        imageVector = Icons.Default.Timeline,
+                        contentDescription = null,
+                        tint = MaterialTheme.colorScheme.primary,
+                        modifier = Modifier.size(24.dp)
+                    )
+                    Spacer(modifier = Modifier.width(12.dp))
+                    Text(
+                        text = "Log foods in your Daily Diary to see calorie and macro trends over time.",
+                        style = MaterialTheme.typography.bodySmall,
+                        color = MaterialTheme.colorScheme.onSurfaceVariant
+                    )
+                }
             }
         }
 

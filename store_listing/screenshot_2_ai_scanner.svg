@@ -1,0 +1,183 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1080 1920" width="1080" height="1920">
+  <defs>
+    <linearGradient id="camBg" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#050E0A"/>
+      <stop offset="100%" stop-color="#0B1C13"/>
+    </linearGradient>
+    <linearGradient id="scanCardBg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#102B1D"/>
+      <stop offset="100%" stop-color="#163A27"/>
+    </linearGradient>
+    <linearGradient id="btnGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#22C55E"/>
+      <stop offset="100%" stop-color="#16A34A"/>
+    </linearGradient>
+    <filter id="aiGlow" x="-20%" y="-20%" width="140%" height="140%">
+      <feGaussianBlur stdDeviation="8" result="blur"/>
+      <feComposite in="SourceGraphic" in2="blur" operator="over"/>
+    </filter>
+  </defs>
+
+  <!-- Background -->
+  <rect width="1080" height="1920" fill="url(#camBg)"/>
+
+  <!-- Top Marketing Banner Header -->
+  <rect width="1080" height="180" fill="#0C251A"/>
+  <text x="540" y="80" font-family="system-ui, -apple-system, sans-serif" font-size="34" font-weight="800" fill="#22C55E" text-anchor="middle" letter-spacing="1.5">AI MEAL &amp; LABEL SCANNER</text>
+  <text x="540" y="130" font-family="system-ui, -apple-system, sans-serif" font-size="24" font-weight="500" fill="#E2E8F0" text-anchor="middle">Snap a photo of ingredients or nutrition labels for instant macros</text>
+
+  <!-- Status Bar -->
+  <text x="64" y="225" font-family="system-ui, -apple-system, sans-serif" font-size="20" font-weight="600" fill="#94A3B8">9:41</text>
+  <text x="1016" y="225" font-family="system-ui, -apple-system, sans-serif" font-size="20" font-weight="600" fill="#94A3B8" text-anchor="end">100% 📶</text>
+
+  <!-- Mode Toggle Pills: Meal Photo vs Nutrition Label -->
+  <g transform="translate(190, 260)">
+    <rect width="700" height="60" rx="30" fill="#0E2317" stroke="#22C55E" stroke-opacity="0.3"/>
+    <!-- Selected: Nutrition Facts Label -->
+    <rect x="350" y="4" width="342" height="52" rx="26" fill="#22C55E"/>
+    <text x="175" y="40" font-family="system-ui, -apple-system, sans-serif" font-size="20" font-weight="600" fill="#94A3B8" text-anchor="middle">📸 Meal / Recipe</text>
+    <text x="521" y="40" font-family="system-ui, -apple-system, sans-serif" font-size="20" font-weight="800" fill="#052011" text-anchor="middle">🏷️ Nutrition Facts Label</text>
+  </g>
+
+  <!-- Camera Viewfinder Section -->
+  <g transform="translate(90, 350)">
+    <!-- Simulated Camera Viewport -->
+    <rect width="900" height="650" rx="24" fill="#081810" stroke="#FFFFFF" stroke-opacity="0.1"/>
+
+    <!-- Simulated Nutrition Label in Viewfinder -->
+    <g transform="translate(240, 60)">
+      <rect width="420" height="530" rx="12" fill="#FFFFFF"/>
+      <!-- Label Header -->
+      <rect x="20" y="20" width="380" height="42" fill="#000000"/>
+      <text x="210" y="48" font-family="Impact, Arial Black, sans-serif" font-size="28" fill="#FFFFFF" text-anchor="middle">Nutrition Facts</text>
+      <!-- Servings -->
+      <text x="25" y="85" font-family="system-ui, sans-serif" font-size="14" fill="#333333">8 servings per container</text>
+      <text x="25" y="105" font-family="system-ui, sans-serif" font-size="15" font-weight="700" fill="#000000">Serving size 2/3 cup (55g)</text>
+      <line x1="25" y1="116" x2="395" y2="116" stroke="#000000" stroke-width="8"/>
+      <!-- Calories -->
+      <text x="25" y="142" font-family="system-ui, sans-serif" font-size="14" font-weight="700" fill="#000000">Calories</text>
+      <text x="395" y="152" font-family="Impact, Arial Black, sans-serif" font-size="44" fill="#000000" text-anchor="end">240</text>
+      <line x1="25" y1="162" x2="395" y2="162" stroke="#000000" stroke-width="4"/>
+      <!-- Macro lines -->
+      <text x="25" y="186" font-family="system-ui, sans-serif" font-size="14" font-weight="700" fill="#000000">Total Fat 8g (10% DV)</text>
+      <line x1="25" y1="196" x2="395" y2="196" stroke="#CCCCCC" stroke-width="1"/>
+      <text x="25" y="220" font-family="system-ui, sans-serif" font-size="14" font-weight="700" fill="#000000">Sodium 140mg (6% DV)</text>
+      <line x1="25" y1="230" x2="395" y2="230" stroke="#CCCCCC" stroke-width="1"/>
+      <text x="25" y="254" font-family="system-ui, sans-serif" font-size="14" font-weight="700" fill="#000000">Total Carbohydrate 32g (12% DV)</text>
+      <line x1="25" y1="264" x2="395" y2="264" stroke="#CCCCCC" stroke-width="1"/>
+      <text x="25" y="288" font-family="system-ui, sans-serif" font-size="14" font-weight="700" fill="#000000">Dietary Fiber 5g (18% DV)</text>
+      <line x1="25" y1="298" x2="395" y2="298" stroke="#CCCCCC" stroke-width="1"/>
+      <text x="25" y="322" font-family="system-ui, sans-serif" font-size="14" font-weight="700" fill="#000000">Protein 12g (24% DV)</text>
+      <line x1="25" y1="332" x2="395" y2="332" stroke="#000000" stroke-width="6"/>
+      <!-- Ingredients note -->
+      <text x="25" y="360" font-family="system-ui, sans-serif" font-size="12" fill="#555555">Ingredients: Whole grain oats, whey</text>
+      <text x="25" y="378" font-family="system-ui, sans-serif" font-size="12" fill="#555555">protein crisps, raw honey, flax seeds.</text>
+    </g>
+
+    <!-- Glowing Green Viewfinder Reticle Corners -->
+    <!-- Top Left -->
+    <path d="M 40,90 L 40,40 L 90,40" stroke="#22C55E" stroke-width="6" fill="none" stroke-linecap="round"/>
+    <!-- Top Right -->
+    <path d="M 810,40 L 860,40 L 860,90" stroke="#22C55E" stroke-width="6" fill="none" stroke-linecap="round"/>
+    <!-- Bottom Left -->
+    <path d="M 40,560 L 40,610 L 90,610" stroke="#22C55E" stroke-width="6" fill="none" stroke-linecap="round"/>
+    <!-- Bottom Right -->
+    <path d="M 810,610 L 860,610 L 860,560" stroke="#22C55E" stroke-width="6" fill="none" stroke-linecap="round"/>
+
+    <!-- Laser Scanning Beam Line -->
+    <line x1="40" y1="320" x2="860" y2="320" stroke="#4ADE80" stroke-width="3" filter="url(#aiGlow)"/>
+  </g>
+
+  <!-- AI Analysis Result Card -->
+  <g transform="translate(64, 1030)">
+    <rect width="952" height="660" rx="28" fill="url(#scanCardBg)" stroke="#22C55E" stroke-opacity="0.35" stroke-width="2"/>
+
+    <!-- AI Detection Tag -->
+    <rect x="36" y="32" width="220" height="38" rx="19" fill="#1B4931"/>
+    <text x="146" y="58" font-family="system-ui, -apple-system, sans-serif" font-size="17" font-weight="700" fill="#4ADE80" text-anchor="middle">✨ AI Identified</text>
+
+    <!-- Dish / Food Name -->
+    <text x="36" y="115" font-family="system-ui, -apple-system, sans-serif" font-size="32" font-weight="800" fill="#FFFFFF">Organic Honey Protein Granola</text>
+    <text x="36" y="148" font-family="system-ui, -apple-system, sans-serif" font-size="18" font-weight="500" fill="#94A3B8">Serving size from label: 2/3 cup (55g) • 8 servings</text>
+
+    <!-- Macro Pills Grid -->
+    <g transform="translate(36, 175)">
+      <!-- Calories -->
+      <rect x="0" y="0" width="206" height="110" rx="16" fill="#0C2016" stroke="#22C55E" stroke-opacity="0.2"/>
+      <text x="103" y="44" font-family="system-ui, -apple-system, sans-serif" font-size="16" font-weight="600" fill="#94A3B8" text-anchor="middle">Calories</text>
+      <text x="103" y="88" font-family="system-ui, -apple-system, sans-serif" font-size="34" font-weight="800" fill="#FFFFFF" text-anchor="middle">240</text>
+
+      <!-- Protein -->
+      <rect x="224" y="0" width="206" height="110" rx="16" fill="#0C2016" stroke="#22C55E" stroke-opacity="0.2"/>
+      <text x="327" y="44" font-family="system-ui, -apple-system, sans-serif" font-size="16" font-weight="600" fill="#4ADE80" text-anchor="middle">Protein</text>
+      <text x="327" y="88" font-family="system-ui, -apple-system, sans-serif" font-size="34" font-weight="800" fill="#4ADE80" text-anchor="middle">12g</text>
+
+      <!-- Carbs -->
+      <rect x="448" y="0" width="206" height="110" rx="16" fill="#0C2016" stroke="#F59E0B" stroke-opacity="0.2"/>
+      <text x="551" y="44" font-family="system-ui, -apple-system, sans-serif" font-size="16" font-weight="600" fill="#FBBF24" text-anchor="middle">Carbs</text>
+      <text x="551" y="88" font-family="system-ui, -apple-system, sans-serif" font-size="34" font-weight="800" fill="#FBBF24" text-anchor="middle">32g</text>
+
+      <!-- Fat -->
+      <rect x="672" y="0" width="206" height="110" rx="16" fill="#0C2016" stroke="#38BDF8" stroke-opacity="0.2"/>
+      <text x="775" y="44" font-family="system-ui, -apple-system, sans-serif" font-size="16" font-weight="600" fill="#38BDF8" text-anchor="middle">Fat</text>
+      <text x="775" y="88" font-family="system-ui, -apple-system, sans-serif" font-size="34" font-weight="800" fill="#38BDF8" text-anchor="middle">8g</text>
+    </g>
+
+    <!-- Portion Slider / Grams Intake -->
+    <g transform="translate(36, 315)">
+      <text x="0" y="24" font-family="system-ui, -apple-system, sans-serif" font-size="20" font-weight="700" fill="#FFFFFF">How much did you eat?</text>
+      <text x="880" y="24" font-family="system-ui, -apple-system, sans-serif" font-size="22" font-weight="800" fill="#22C55E" text-anchor="end">110g (2.0x serving)</text>
+      <!-- Slider Track -->
+      <rect x="0" y="40" width="880" height="16" rx="8" fill="#0C1F15"/>
+      <rect x="0" y="40" width="440" height="16" rx="8" fill="#22C55E"/>
+      <circle cx="440" cy="48" r="16" fill="#FFFFFF" stroke="#22C55E" stroke-width="4"/>
+      <!-- Recalculated totals info -->
+      <text x="0" y="85" font-family="system-ui, -apple-system, sans-serif" font-size="17" font-weight="600" fill="#94A3B8">Recalculated for 110g: 480 kcal • 24g Protein • 64g Carbs • 16g Fat</text>
+    </g>
+
+    <!-- Meal Destination Selector (Breakfast, Lunch, Dinner, Snack) -->
+    <g transform="translate(36, 430)">
+      <text x="0" y="22" font-family="system-ui, -apple-system, sans-serif" font-size="18" font-weight="600" fill="#94A3B8">Log to Meal:</text>
+      <!-- Meal Pills -->
+      <rect x="140" y="0" width="160" height="38" rx="19" fill="#22C55E"/>
+      <text x="220" y="26" font-family="system-ui, -apple-system, sans-serif" font-size="16" font-weight="800" fill="#042111" text-anchor="middle">Breakfast ✓</text>
+
+      <rect x="315" y="0" width="130" height="38" rx="19" fill="#0C2016" stroke="#FFFFFF" stroke-opacity="0.1"/>
+      <text x="380" y="26" font-family="system-ui, -apple-system, sans-serif" font-size="16" font-weight="600" fill="#94A3B8" text-anchor="middle">Lunch</text>
+
+      <rect x="460" y="0" width="130" height="38" rx="19" fill="#0C2016" stroke="#FFFFFF" stroke-opacity="0.1"/>
+      <text x="525" y="26" font-family="system-ui, -apple-system, sans-serif" font-size="16" font-weight="600" fill="#94A3B8" text-anchor="middle">Dinner</text>
+
+      <rect x="605" y="0" width="130" height="38" rx="19" fill="#0C2016" stroke="#FFFFFF" stroke-opacity="0.1"/>
+      <text x="670" y="26" font-family="system-ui, -apple-system, sans-serif" font-size="16" font-weight="600" fill="#94A3B8" text-anchor="middle">Snack</text>
+    </g>
+
+    <!-- Big Action Button: Log to Diary -->
+    <g transform="translate(36, 520)">
+      <rect width="880" height="80" rx="22" fill="url(#btnGrad)"/>
+      <text x="440" y="50" font-family="system-ui, -apple-system, sans-serif" font-size="24" font-weight="800" fill="#042111" text-anchor="middle">✓ Add to Breakfast Diary</text>
+    </g>
+  </g>
+
+  <!-- Bottom Navigation Bar -->
+  <g transform="translate(0, 1780)">
+    <rect width="1080" height="140" fill="#0B1A12" stroke="#FFFFFF" stroke-opacity="0.08"/>
+    <g transform="translate(135, 30)">
+      <text x="0" y="28" font-size="24" text-anchor="middle">📖</text>
+      <text x="0" y="66" font-family="system-ui, -apple-system, sans-serif" font-size="16" font-weight="500" fill="#94A3B8" text-anchor="middle">Diary</text>
+    </g>
+    <g transform="translate(405, 30)">
+      <text x="0" y="28" font-size="24" text-anchor="middle">📊</text>
+      <text x="0" y="66" font-family="system-ui, -apple-system, sans-serif" font-size="16" font-weight="500" fill="#94A3B8" text-anchor="middle">History</text>
+    </g>
+    <g transform="translate(675, 30)">
+      <circle cx="0" cy="20" r="26" fill="#153E2A"/>
+      <text x="0" y="28" font-size="24" text-anchor="middle">✨</text>
+      <text x="0" y="66" font-family="system-ui, -apple-system, sans-serif" font-size="16" font-weight="700" fill="#22C55E" text-anchor="middle">AI Scanner</text>
+    </g>
+    <g transform="translate(945, 30)">
+      <text x="0" y="28" font-size="24" text-anchor="middle">⚙️</text>
+      <text x="0" y="66" font-family="system-ui, -apple-system, sans-serif" font-size="16" font-weight="500" fill="#94A3B8" text-anchor="middle">Settings</text>
+    </g>
+  </g>
+</svg>

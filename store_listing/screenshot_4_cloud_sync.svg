@@ -1,0 +1,155 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1080 1920" width="1080" height="1920">
+  <defs>
+    <linearGradient id="syncBg" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#08140E"/>
+      <stop offset="100%" stop-color="#040906"/>
+    </linearGradient>
+    <linearGradient id="syncCard" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#11291C"/>
+      <stop offset="100%" stop-color="#163826"/>
+    </linearGradient>
+    <linearGradient id="btnSync" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#22C55E"/>
+      <stop offset="100%" stop-color="#16A34A"/>
+    </linearGradient>
+    <filter id="syncGlow" x="-20%" y="-20%" width="140%" height="140%">
+      <feGaussianBlur stdDeviation="6" result="blur"/>
+      <feComposite in="SourceGraphic" in2="blur" operator="over"/>
+    </filter>
+  </defs>
+
+  <!-- Background -->
+  <rect width="1080" height="1920" fill="url(#syncBg)"/>
+
+  <!-- Top Marketing Banner Header -->
+  <rect width="1080" height="180" fill="#0C251A"/>
+  <text x="540" y="80" font-family="system-ui, -apple-system, sans-serif" font-size="34" font-weight="800" fill="#22C55E" text-anchor="middle" letter-spacing="1.5">GOOGLE DRIVE WI-FI AUTO-SYNC</text>
+  <text x="540" y="130" font-family="system-ui, -apple-system, sans-serif" font-size="24" font-weight="500" fill="#E2E8F0" text-anchor="middle">Seamless cloud backup without draining cellular data</text>
+
+  <!-- Status Bar -->
+  <text x="64" y="225" font-family="system-ui, -apple-system, sans-serif" font-size="20" font-weight="600" fill="#94A3B8">9:41</text>
+  <text x="1016" y="225" font-family="system-ui, -apple-system, sans-serif" font-size="20" font-weight="600" fill="#94A3B8" text-anchor="end">100% 📶</text>
+
+  <!-- Settings & Sync Header -->
+  <g transform="translate(64, 260)">
+    <text x="0" y="38" font-family="system-ui, -apple-system, sans-serif" font-size="34" font-weight="800" fill="#FFFFFF">Cloud Backup &amp; Sync</text>
+    <text x="0" y="68" font-family="system-ui, -apple-system, sans-serif" font-size="18" font-weight="500" fill="#94A3B8">Synchronize and protect your health data safely</text>
+  </g>
+
+  <!-- HERO CARD 1: Wi-Fi Auto-Sync Status -->
+  <g transform="translate(64, 360)">
+    <rect width="952" height="420" rx="28" fill="url(#syncCard)" stroke="#22C55E" stroke-opacity="0.35" stroke-width="2"/>
+
+    <!-- Google Drive Brand Icon & Status Pill -->
+    <g transform="translate(36, 36)">
+      <!-- Google Drive Logo Shape Simulation -->
+      <polygon points="28,4 48,38 8,38" fill="#FBBF24"/>
+      <polygon points="48,38 68,4 28,4" fill="#38BDF8"/>
+      <polygon points="8,38 48,38 28,72" fill="#22C55E"/>
+
+      <text x="86" y="32" font-family="system-ui, -apple-system, sans-serif" font-size="26" font-weight="800" fill="#FFFFFF">Google Drive Auto-Sync</text>
+      <text x="86" y="58" font-family="system-ui, -apple-system, sans-serif" font-size="17" font-weight="500" fill="#4ADE80">Connected &amp; Active</text>
+
+      <!-- Toggle Switch (ON) -->
+      <rect x="790" y="10" width="84" height="46" rx="23" fill="#22C55E"/>
+      <circle cx="848" cy="33" r="18" fill="#032111" filter="url(#syncGlow)"/>
+    </g>
+
+    <!-- Sync Status Message Box -->
+    <g transform="translate(36, 130)">
+      <rect width="880" height="120" rx="18" fill="#0A1D13" stroke="#22C55E" stroke-opacity="0.2"/>
+      <!-- Checkmark badge -->
+      <circle cx="48" cy="60" r="24" fill="#164A31"/>
+      <path d="M 38,60 L 45,67 L 58,52" stroke="#4ADE80" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+
+      <text x="92" y="50" font-family="system-ui, -apple-system, sans-serif" font-size="20" font-weight="700" fill="#FFFFFF">Sync Up to Date</text>
+      <text x="92" y="78" font-family="system-ui, -apple-system, sans-serif" font-size="16" font-weight="500" fill="#94A3B8">Last synchronized: 2 minutes ago via Wi-Fi</text>
+      <text x="92" y="102" font-family="system-ui, -apple-system, sans-serif" font-size="15" font-weight="600" fill="#4ADE80">0 pending offline entries • Cloud mirror in sync</text>
+    </g>
+
+    <!-- Detail rows -->
+    <g transform="translate(36, 275)">
+      <!-- Rule 1 -->
+      <text x="0" y="24" font-family="system-ui, -apple-system, sans-serif" font-size="17" font-weight="600" fill="#E2E8F0">📶 Cellular Data Guard:</text>
+      <text x="210" y="24" font-family="system-ui, -apple-system, sans-serif" font-size="16" font-weight="500" fill="#94A3B8">Sync only uploads over unmetered Wi-Fi</text>
+
+      <!-- Rule 2 -->
+      <text x="0" y="60" font-family="system-ui, -apple-system, sans-serif" font-size="17" font-weight="600" fill="#E2E8F0">⏳ Offline Queuing:</text>
+      <text x="180" y="60" font-family="system-ui, -apple-system, sans-serif" font-size="16" font-weight="500" fill="#94A3B8">Entries queue automatically until Wi-Fi re-joins</text>
+
+      <!-- Rule 3 -->
+      <text x="0" y="96" font-family="system-ui, -apple-system, sans-serif" font-size="17" font-weight="600" fill="#E2E8F0">📁 Backup File:</text>
+      <text x="145" y="96" font-family="system-ui, -apple-system, sans-serif" font-size="16" font-weight="500" fill="#4ADE80">Google Drive/NutriLog/nutrilog_backup.json</text>
+    </g>
+  </g>
+
+  <!-- CARD 2: Manual Cloud Actions -->
+  <g transform="translate(64, 810)">
+    <rect width="952" height="280" rx="28" fill="url(#syncCard)" stroke="#FFFFFF" stroke-opacity="0.08"/>
+
+    <text x="36" y="44" font-family="system-ui, -apple-system, sans-serif" font-size="22" font-weight="700" fill="#FFFFFF">Cross-Device Transfer</text>
+    <text x="36" y="72" font-family="system-ui, -apple-system, sans-serif" font-size="16" font-weight="500" fill="#94A3B8">Export or restore your diary on any Android tablet or new phone</text>
+
+    <!-- Action Button 1: Sync Now -->
+    <g transform="translate(36, 95)">
+      <rect width="425" height="66" rx="18" fill="url(#btnSync)"/>
+      <text x="212" y="42" font-family="system-ui, -apple-system, sans-serif" font-size="19" font-weight="800" fill="#042111" text-anchor="middle">☁️ Sync to Drive Now</text>
+    </g>
+
+    <!-- Action Button 2: Choose Google Drive File -->
+    <g transform="translate(490, 95)">
+      <rect width="425" height="66" rx="18" fill="#153626" stroke="#22C55E" stroke-opacity="0.3"/>
+      <text x="212" y="42" font-family="system-ui, -apple-system, sans-serif" font-size="19" font-weight="700" fill="#4ADE80" text-anchor="middle">📂 Link Drive Document</text>
+    </g>
+
+    <!-- Action Button 3: Restore Backup -->
+    <g transform="translate(36, 180)">
+      <rect width="880" height="66" rx="18" fill="#0C2016" stroke="#FFFFFF" stroke-opacity="0.12"/>
+      <text x="440" y="42" font-family="system-ui, -apple-system, sans-serif" font-size="19" font-weight="700" fill="#E2E8F0" text-anchor="middle">📥 Restore History From Backup File</text>
+    </g>
+  </g>
+
+  <!-- CARD 3: Privacy & Zero Ad Tracking Guarantee -->
+  <g transform="translate(64, 1120)">
+    <rect width="952" height="340" rx="28" fill="#0A1E14" stroke="#22C55E" stroke-opacity="0.25"/>
+    <circle cx="68" cy="64" r="28" fill="#133C27"/>
+    <text x="68" y="74" font-size="28" text-anchor="middle">🛡️</text>
+
+    <text x="120" y="58" font-family="system-ui, -apple-system, sans-serif" font-size="24" font-weight="800" fill="#FFFFFF">Privacy First Architecture</text>
+    <text x="120" y="86" font-family="system-ui, -apple-system, sans-serif" font-size="17" font-weight="500" fill="#4ADE80">Your health data belongs exclusively to you</text>
+
+    <!-- Bullet Points -->
+    <g transform="translate(36, 130)">
+      <text x="0" y="24" font-family="system-ui, -apple-system, sans-serif" font-size="17" font-weight="600" fill="#FFFFFF">• 100% Local Storage by Default</text>
+      <text x="32" y="50" font-family="system-ui, -apple-system, sans-serif" font-size="15" font-weight="500" fill="#94A3B8">All meals, goals, and history are kept in a local SQLite database on your device.</text>
+
+      <text x="0" y="90" font-family="system-ui, -apple-system, sans-serif" font-size="17" font-weight="600" fill="#FFFFFF">• Zero Ad Trackers or Third-Party Brokers</text>
+      <text x="32" y="116" font-family="system-ui, -apple-system, sans-serif" font-size="15" font-weight="500" fill="#94A3B8">We do not sell, broker, or monetize your nutrition habits or personal logs.</text>
+
+      <text x="0" y="156" font-family="system-ui, -apple-system, sans-serif" font-size="17" font-weight="600" fill="#FFFFFF">• Direct Google Drive Sync</text>
+      <text x="32" y="182" font-family="system-ui, -apple-system, sans-serif" font-size="15" font-weight="500" fill="#94A3B8">Backups are written straight to your personal Google Drive via Android Storage Access.</text>
+    </g>
+  </g>
+
+  <!-- Bottom Navigation Bar -->
+  <g transform="translate(0, 1780)">
+    <rect width="1080" height="140" fill="#0B1A12" stroke="#FFFFFF" stroke-opacity="0.08"/>
+    <g transform="translate(135, 30)">
+      <text x="0" y="28" font-size="24" text-anchor="middle">📖</text>
+      <text x="0" y="66" font-family="system-ui, -apple-system, sans-serif" font-size="16" font-weight="500" fill="#94A3B8" text-anchor="middle">Diary</text>
+    </g>
+    <g transform="translate(405, 30)">
+      <text x="0" y="28" font-size="24" text-anchor="middle">📊</text>
+      <text x="0" y="66" font-family="system-ui, -apple-system, sans-serif" font-size="16" font-weight="500" fill="#94A3B8" text-anchor="middle">History</text>
+    </g>
+    <g transform="translate(675, 30)">
+      <text x="0" y="28" font-size="24" text-anchor="middle">✨</text>
+      <text x="0" y="66" font-family="system-ui, -apple-system, sans-serif" font-size="16" font-weight="500" fill="#94A3B8" text-anchor="middle">AI Insights</text>
+    </g>
+    <g transform="translate(945, 30)">
+      <circle cx="0" cy="20" r="26" fill="#153E2A"/>
+      <text x="0" y="28" font-size="24" text-anchor="middle">⚙️</text>
+      <text x="0" y="66" font-family="system-ui, -apple-system, sans-serif" font-size="16" font-weight="700" fill="#22C55E" text-anchor="middle">Settings &amp; Sync</text>
+    </g>
+  </g>
+</svg>
