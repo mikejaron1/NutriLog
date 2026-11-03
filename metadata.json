@@ -1,0 +1,6 @@
+{
+  "name": "NutriLog",
+  "description": "Minimalist food intake & macro tracker with AI recipe & ingredient photo analysis, barcode scanning, personalized nutritional insights, and Google Drive backup.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="108dp"
+    android:height="108dp"
+    android:viewportWidth="108"
+    android:viewportHeight="108">
+    <!-- Macro ring track -->
+    <path
+        android:strokeColor="#33FFFFFF"
+        android:strokeWidth="4"
+        android:strokeLineCap="round"
+        android:fillColor="#00000000"
+        android:pathData="M54,26 A28,28 0 1,1 26,54" />
+    <!-- Protein arc (Mint green) -->
+    <path
+        android:strokeColor="#22C55E"
+        android:strokeWidth="5"
+        android:strokeLineCap="round"
+        android:fillColor="#00000000"
+        android:pathData="M54,26 A28,28 0 0,1 82,54" />
+    <!-- Carbs arc (Amber) -->
+    <path
+        android:strokeColor="#F59E0B"
+        android:strokeWidth="5"
+        android:strokeLineCap="round"
+        android:fillColor="#00000000"
+        android:pathData="M82,54 A28,28 0 0,1 54,82" />
+    <!-- Center nutrition leaf & seedling icon -->
+    <path
+        android:fillColor="#FFFFFF"
+        android:pathData="M54,36 C54,36 43,46 43,56 C43,62.6 48.4,68 55,68 C61.6,68 67,62.6 67,56 C67,46 54,36 54,36 Z M54,63 C50.7,63 48,60.3 48,57 C48,52.5 53,46.5 54,45 C55,46.5 60,52.5 60,57 C60,60.3 57.3,63 54,63 Z" />
+    <path
+        android:fillColor="#4ADE80"
+        android:pathData="M54,48 C51.8,48 50,49.8 50,52 C50,55 54,60 54,60 C54,60 58,55 58,52 C58,49.8 56.2,48 54,48 Z" />
+</vector>
