@@ -27,8 +27,10 @@ import androidx.compose.material.icons.filled.DarkMode
 import androidx.compose.material.icons.filled.LightMode
 import androidx.compose.material.icons.filled.SettingsBrightness
 import androidx.compose.material.icons.filled.TrackChanges
+import androidx.compose.material.icons.filled.Security
 import androidx.compose.material.icons.filled.Wifi
 import androidx.compose.material.icons.filled.WifiOff
+import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
@@ -42,6 +44,7 @@ import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -86,6 +89,7 @@ fun SettingsAndSyncScreen(
     var fiberText by remember(currentGoal) { mutableStateOf(currentGoal.fiberTargetGrams.toString()) }
     var waterText by remember(currentGoal) { mutableStateOf(currentGoal.waterTargetMl.toString()) }
     var goalsSavedMessage by remember { mutableStateOf(false) }
+    var showPrivacyDialog by remember { mutableStateOf(false) }
 
     // Google Drive SAF launchers
     val createDocLauncher = rememberLauncherForActivityResult(
@@ -624,24 +628,97 @@ fun SettingsAndSyncScreen(
             }
         }
 
-        // About
+        // About & Privacy Policy
         Surface(
             modifier = Modifier.fillMaxWidth(),
             color = MaterialTheme.colorScheme.surfaceVariant.copy(alpha = 0.5f),
             shape = RoundedCornerShape(14.dp)
         ) {
             Column(modifier = Modifier.padding(14.dp)) {
-                Text(
-                    text = "NutriLog v2.0",
-                    fontWeight = FontWeight.Bold,
-                    style = MaterialTheme.typography.labelMedium
-                )
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.SpaceBetween,
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Text(
+                        text = "NutriLog v2.0",
+                        fontWeight = FontWeight.Bold,
+                        style = MaterialTheme.typography.labelMedium
+                    )
+
+                    OutlinedButton(
+                        onClick = { showPrivacyDialog = true },
+                        shape = RoundedCornerShape(8.dp),
+                        modifier = Modifier.testTag("privacy_policy_button")
+                    ) {
+                        Icon(
+                            imageVector = Icons.Default.Security,
+                            contentDescription = null,
+                            modifier = Modifier.size(14.dp)
+                        )
+                        Spacer(modifier = Modifier.width(4.dp))
+                        Text("Privacy Policy", style = MaterialTheme.typography.labelSmall)
+                    }
+                }
+                Spacer(modifier = Modifier.height(6.dp))
                 Text(
                     text = "Powered by Google Gemini & Firebase AI Logic. Nutrition information is provided for tracking and reference purposes.",
                     style = MaterialTheme.typography.labelSmall,
                     color = MaterialTheme.colorScheme.onSurfaceVariant
                 )
             }
+        }
+
+        if (showPrivacyDialog) {
+            AlertDialog(
+                onDismissRequest = { showPrivacyDialog = false },
+                title = {
+                    Row(verticalAlignment = Alignment.CenterVertically) {
+                        Icon(
+                            imageVector = Icons.Default.Security,
+                            contentDescription = null,
+                            tint = MaterialTheme.colorScheme.primary,
+                            modifier = Modifier.size(22.dp)
+                        )
+                        Spacer(modifier = Modifier.width(8.dp))
+                        Text("Privacy Policy")
+                    }
+                },
+                text = {
+                    Column(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .verticalScroll(rememberScrollState()),
+                        verticalArrangement = Arrangement.spacedBy(10.dp)
+                    ) {
+                        Text(
+                            text = "NutriLog respects and protects your personal privacy.",
+                            style = MaterialTheme.typography.bodyMedium,
+                            fontWeight = FontWeight.SemiBold
+                        )
+                        Text(
+                            text = "• Local Storage: All meal logs, custom foods, and macro targets are kept locally on your device in a secure SQLite database.\n" +
+                                "• Camera & Scans: Camera access is only used on-device for barcode scanning and food/label photos to calculate nutritional info.\n" +
+                                "• Google Drive Sync: Backups and Wi-Fi auto-sync transfer data directly to your personal Google Drive account. We never access, store, or sell your files.\n" +
+                                "• AI Processing: Descriptions and food images submitted for analysis are processed by Google Gemini and Firebase AI Logic to estimate nutritional macros.\n" +
+                                "• Data Ownership: You can delete any entries or wipe data at any time.",
+                            style = MaterialTheme.typography.bodySmall,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant
+                        )
+                        Spacer(modifier = Modifier.height(4.dp))
+                        Text(
+                            text = "Contact: MikeJaron@gmail.com\nPublic Document: PRIVACY_POLICY.md in repository",
+                            style = MaterialTheme.typography.labelSmall,
+                            color = MaterialTheme.colorScheme.primary
+                        )
+                    }
+                },
+                confirmButton = {
+                    TextButton(onClick = { showPrivacyDialog = false }) {
+                        Text("Close")
+                    }
+                }
+            )
         }
 
         Spacer(modifier = Modifier.height(80.dp))
