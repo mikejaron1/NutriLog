@@ -48,6 +48,7 @@ import com.example.ui.theme.FatColor
 import com.example.ui.theme.FiberColor
 import com.example.ui.theme.ProteinColor
 import com.example.ui.theme.WaterColor
+import kotlin.math.roundToInt
 
 @Composable
 fun MacroSummaryCard(
@@ -184,8 +185,10 @@ fun MacroSummaryCard(
                                     color = MaterialTheme.colorScheme.onSurface
                                 )
                             }
+                            val intakeOz = (waterIntakeMl / 29.5735).roundToInt()
+                            val targetOz = (goal.waterTargetMl / 29.5735).roundToInt()
                             Text(
-                                "$waterIntakeMl / ${goal.waterTargetMl} ml",
+                                "$intakeOz / $targetOz oz",
                                 style = MaterialTheme.typography.labelMedium,
                                 fontWeight = FontWeight.SemiBold,
                                 color = WaterColor
@@ -247,13 +250,13 @@ fun MacroSummaryCard(
                 )
                 Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
                     Surface(
-                        onClick = { onAddWater(250) },
+                        onClick = { onAddWater(237) }, // 8 fl oz = ~237 ml
                         shape = RoundedCornerShape(16.dp),
                         color = WaterColor.copy(alpha = 0.15f),
-                        modifier = Modifier.testTag("water_add_250")
+                        modifier = Modifier.testTag("water_add_8oz")
                     ) {
                         Text(
-                            "+250 ml",
+                            "+8 oz",
                             modifier = Modifier.padding(horizontal = 10.dp, vertical = 4.dp),
                             style = MaterialTheme.typography.labelSmall,
                             fontWeight = FontWeight.Bold,
@@ -261,13 +264,13 @@ fun MacroSummaryCard(
                         )
                     }
                     Surface(
-                        onClick = { onAddWater(500) },
+                        onClick = { onAddWater(473) }, // 16 fl oz = ~473 ml
                         shape = RoundedCornerShape(16.dp),
                         color = WaterColor.copy(alpha = 0.15f),
-                        modifier = Modifier.testTag("water_add_500")
+                        modifier = Modifier.testTag("water_add_16oz")
                     ) {
                         Text(
-                            "+500 ml",
+                            "+16 oz",
                             modifier = Modifier.padding(horizontal = 10.dp, vertical = 4.dp),
                             style = MaterialTheme.typography.labelSmall,
                             fontWeight = FontWeight.Bold,
@@ -276,13 +279,13 @@ fun MacroSummaryCard(
                     }
                     if (waterIntakeMl > 0) {
                         Surface(
-                            onClick = { onAddWater(-250) },
+                            onClick = { onAddWater(-237) },
                             shape = RoundedCornerShape(16.dp),
                             color = MaterialTheme.colorScheme.surfaceVariant,
-                            modifier = Modifier.testTag("water_subtract_250")
+                            modifier = Modifier.testTag("water_subtract_8oz")
                         ) {
                             Text(
-                                "-250 ml",
+                                "-8 oz",
                                 modifier = Modifier.padding(horizontal = 8.dp, vertical = 4.dp),
                                 style = MaterialTheme.typography.labelSmall,
                                 color = MaterialTheme.colorScheme.onSurfaceVariant

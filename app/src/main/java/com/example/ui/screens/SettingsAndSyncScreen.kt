@@ -72,6 +72,7 @@ import com.example.ui.AiActionState
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
+import kotlin.math.roundToInt
 
 @Composable
 fun SettingsAndSyncScreen(
@@ -99,7 +100,7 @@ fun SettingsAndSyncScreen(
     var carbsText by remember(currentGoal) { mutableStateOf(currentGoal.carbsTargetGrams.toString()) }
     var fatText by remember(currentGoal) { mutableStateOf(currentGoal.fatTargetGrams.toString()) }
     var fiberText by remember(currentGoal) { mutableStateOf(currentGoal.fiberTargetGrams.toString()) }
-    var waterText by remember(currentGoal) { mutableStateOf(currentGoal.waterTargetMl.toString()) }
+    var waterText by remember(currentGoal) { mutableStateOf((currentGoal.waterTargetMl / 29.5735).roundToInt().toString()) }
     var goalsSavedMessage by remember { mutableStateOf(false) }
     var showPrivacyDialog by remember { mutableStateOf(false) }
     var showClearHistoryDialog by remember { mutableStateOf(false) }
@@ -236,120 +237,135 @@ fun SettingsAndSyncScreen(
                         .fillMaxWidth()
                         .testTag("wifi_sync_status_panel")
                 ) {
-                    Column(modifier = Modifier.padding(14.dp)) {
+                    Column(
+                        modifier = Modifier.padding(16.dp),
+                        verticalArrangement = Arrangement.spacedBy(10.dp)
+                    ) {
+                        // Header row with Wi-Fi icon, status, and queued badge
                         Row(
                             verticalAlignment = Alignment.CenterVertically,
-                            horizontalArrangement = Arrangement.SpaceBetween,
                             modifier = Modifier.fillMaxWidth()
                         ) {
-                            Row(verticalAlignment = Alignment.CenterVertically) {
-                                Icon(
-                                    imageVector = if (autoSyncState.isWifiConnected) Icons.Default.Wifi else Icons.Default.WifiOff,
-                                    contentDescription = "Wi-Fi Status",
-                                    tint = if (autoSyncState.isWifiConnected) {
-                                        MaterialTheme.colorScheme.primary
-                                    } else {
-                                        MaterialTheme.colorScheme.tertiary
-                                    },
-                                    modifier = Modifier.size(20.dp)
-                                )
-                                Spacer(modifier = Modifier.width(8.dp))
+                            Icon(
+                                imageVector = if (autoSyncState.isWifiConnected) Icons.Default.Wifi else Icons.Default.WifiOff,
+                                contentDescription = "Wi-Fi Status",
+                                tint = if (autoSyncState.isWifiConnected) {
+                                    MaterialTheme.colorScheme.primary
+                                } else {
+                                    MaterialTheme.colorScheme.tertiary
+                                },
+                                modifier = Modifier.size(24.dp)
+                            )
+                            Spacer(modifier = Modifier.width(10.dp))
+                            Column(modifier = Modifier.weight(1f)) {
                                 Text(
                                     text = if (autoSyncState.isWifiConnected) {
                                         "Wi-Fi Connected • Ready to Auto-Upload"
                                     } else {
-                                        "Not on Wi-Fi • Waiting for Wi-Fi Connection"
+                                        "Not on Wi-Fi • Waiting for Connection"
                                     },
-                                    style = MaterialTheme.typography.labelLarge,
+                                    style = MaterialTheme.typography.titleSmall,
                                     fontWeight = FontWeight.Bold
+                                )
+                                Text(
+                                    text = if (autoSyncState.isWifiConnected) {
+                                        "Changes automatically upload to Google Drive"
+                                    } else {
+                                        "Entries queue locally and upload when Wi-Fi joins"
+                                    },
+                                    style = MaterialTheme.typography.labelSmall,
+                                    color = MaterialTheme.colorScheme.onSurfaceVariant
                                 )
                             }
 
                             if (autoSyncState.pendingEntriesCount > 0) {
                                 Surface(
                                     shape = RoundedCornerShape(8.dp),
-                                    color = MaterialTheme.colorScheme.tertiary
+                                    color = MaterialTheme.colorScheme.tertiary,
+                                    modifier = Modifier.padding(start = 6.dp)
                                 ) {
                                     Text(
                                         text = "${autoSyncState.pendingEntriesCount} Queued",
                                         style = MaterialTheme.typography.labelSmall,
                                         color = MaterialTheme.colorScheme.onTertiary,
                                         fontWeight = FontWeight.Bold,
-                                        modifier = Modifier.padding(horizontal = 8.dp, vertical = 3.dp)
+                                        modifier = Modifier.padding(horizontal = 8.dp, vertical = 4.dp)
                                     )
                                 }
                             }
                         }
 
-                        Spacer(modifier = Modifier.height(8.dp))
                         HorizontalDivider(color = MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.4f))
-                        Spacer(modifier = Modifier.height(8.dp))
 
-                        Text(
-                            text = "Status: ${autoSyncState.lastSyncMessage}",
-                            style = MaterialTheme.typography.bodySmall,
-                            fontWeight = FontWeight.Medium
-                        )
-                        Spacer(modifier = Modifier.height(2.dp))
-                        Text(
-                            text = "Last Drive Upload: $formattedLastSynced",
-                            style = MaterialTheme.typography.labelSmall,
-                            color = MaterialTheme.colorScheme.onSurfaceVariant
-                        )
-                        Text(
-                            text = "Target Drive File: ${autoSyncState.linkedDriveFileName}",
-                            style = MaterialTheme.typography.labelSmall,
-                            color = MaterialTheme.colorScheme.onSurfaceVariant
-                        )
+                        Column(verticalArrangement = Arrangement.spacedBy(3.dp)) {
+                            Text(
+                                text = "Status: ${autoSyncState.lastSyncMessage}",
+                                style = MaterialTheme.typography.bodySmall,
+                                fontWeight = FontWeight.Medium
+                            )
+                            Text(
+                                text = "Last Drive Upload: $formattedLastSynced",
+                                style = MaterialTheme.typography.labelSmall,
+                                color = MaterialTheme.colorScheme.onSurfaceVariant
+                            )
+                            Text(
+                                text = "Target Drive File: ${autoSyncState.linkedDriveFileName}",
+                                style = MaterialTheme.typography.labelSmall,
+                                color = MaterialTheme.colorScheme.onSurfaceVariant
+                            )
+                        }
 
-                        Spacer(modifier = Modifier.height(10.dp))
+                        // Wide, prominent Sync Now button
+                        Button(
+                            onClick = onSyncNowOverWifi,
+                            enabled = autoSyncState.isWifiConnected && autoSyncState.status != SyncQueueStatus.SYNCING_NOW,
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .height(46.dp)
+                                .testTag("sync_now_wifi_button"),
+                            shape = RoundedCornerShape(12.dp)
+                        ) {
+                            Icon(
+                                imageVector = Icons.Default.CloudSync,
+                                contentDescription = null,
+                                modifier = Modifier.size(18.dp)
+                            )
+                            Spacer(modifier = Modifier.width(8.dp))
+                            Text(
+                                text = if (autoSyncState.status == SyncQueueStatus.SYNCING_NOW) "Syncing with Google Drive..." else "Sync Now to Google Drive",
+                                fontWeight = FontWeight.SemiBold
+                            )
+                        }
 
-                        // Wi-Fi State Simulation / Hold Toggle + Manual Sync Now
+                        // Optional developer/test simulation mode toggle
                         Row(
                             modifier = Modifier.fillMaxWidth(),
-                            horizontalArrangement = Arrangement.spacedBy(8.dp),
+                            horizontalArrangement = Arrangement.SpaceBetween,
                             verticalAlignment = Alignment.CenterVertically
                         ) {
+                            Text(
+                                text = "Test Queue Mode (Hold Uploads)",
+                                style = MaterialTheme.typography.labelSmall,
+                                color = MaterialTheme.colorScheme.onSurfaceVariant
+                            )
                             FilterChip(
                                 selected = autoSyncState.isWifiHoldMode,
                                 onClick = { onSetWifiHoldMode(!autoSyncState.isWifiHoldMode) },
                                 label = {
                                     Text(
-                                        if (autoSyncState.isWifiHoldMode) {
-                                            "Reconnect Wi-Fi (Upload Queue)"
-                                        } else {
-                                            "Simulate Off-Wi-Fi (Queue Mode)"
-                                        },
+                                        if (autoSyncState.isWifiHoldMode) "Wi-Fi Paused (Queuing)" else "Real Wi-Fi Active",
                                         style = MaterialTheme.typography.labelSmall
                                     )
                                 },
                                 leadingIcon = {
                                     Icon(
-                                        imageVector = if (autoSyncState.isWifiHoldMode) Icons.Default.Wifi else Icons.Default.CloudQueue,
+                                        imageVector = if (autoSyncState.isWifiHoldMode) Icons.Default.WifiOff else Icons.Default.Wifi,
                                         contentDescription = null,
-                                        modifier = Modifier.size(16.dp)
+                                        modifier = Modifier.size(14.dp)
                                     )
                                 },
                                 modifier = Modifier.testTag("wifi_hold_mode_chip")
                             )
-
-                            if (autoSyncState.isWifiConnected) {
-                                OutlinedButton(
-                                    onClick = onSyncNowOverWifi,
-                                    modifier = Modifier
-                                        .weight(1f)
-                                        .testTag("sync_now_wifi_button"),
-                                    shape = RoundedCornerShape(10.dp)
-                                ) {
-                                    Icon(
-                                        imageVector = Icons.Default.CloudSync,
-                                        contentDescription = null,
-                                        modifier = Modifier.size(16.dp)
-                                    )
-                                    Spacer(modifier = Modifier.width(4.dp))
-                                    Text("Sync Now", style = MaterialTheme.typography.labelSmall)
-                                }
-                            }
                         }
                     }
                 }
@@ -488,6 +504,20 @@ fun SettingsAndSyncScreen(
 
                 Spacer(modifier = Modifier.height(14.dp))
 
+                // Macro vs Total Calorie Calculation
+                val targetCalories = caloriesText.toIntOrNull() ?: 0
+                val proteinGrams = proteinText.toIntOrNull() ?: 0
+                val carbsGrams = carbsText.toIntOrNull() ?: 0
+                val fatGrams = fatText.toIntOrNull() ?: 0
+
+                val proteinKcal = proteinGrams * 4
+                val carbsKcal = carbsGrams * 4
+                val fatKcal = fatGrams * 9
+                val totalMacroKcal = proteinKcal + carbsKcal + fatKcal
+                val diffKcal = totalMacroKcal - targetCalories
+                val hasEnteredValues = targetCalories > 0 && (proteinGrams > 0 || carbsGrams > 0 || fatGrams > 0)
+                val doMacrosEqualCalories = hasEnteredValues && totalMacroKcal == targetCalories
+
                 Row(
                     modifier = Modifier.fillMaxWidth(),
                     horizontalArrangement = Arrangement.spacedBy(10.dp)
@@ -503,7 +533,12 @@ fun SettingsAndSyncScreen(
                     OutlinedTextField(
                         value = waterText,
                         onValueChange = { waterText = it; goalsSavedMessage = false },
-                        label = { Text("Water (ml)") },
+                        label = { Text("Water (oz)") },
+                        supportingText = {
+                            val oz = waterText.toDoubleOrNull() ?: 0.0
+                            val ml = (oz * 29.5735).roundToInt()
+                            Text("≈ $ml ml", style = MaterialTheme.typography.labelSmall)
+                        },
                         modifier = Modifier.weight(1f),
                         keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
                         singleLine = true
@@ -520,6 +555,10 @@ fun SettingsAndSyncScreen(
                         value = proteinText,
                         onValueChange = { proteinText = it; goalsSavedMessage = false },
                         label = { Text("Protein (g)") },
+                        supportingText = {
+                            val p = proteinText.toIntOrNull() ?: 0
+                            Text("${p * 4} kcal", style = MaterialTheme.typography.labelSmall)
+                        },
                         modifier = Modifier.weight(1f),
                         keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
                         singleLine = true
@@ -528,6 +567,10 @@ fun SettingsAndSyncScreen(
                         value = carbsText,
                         onValueChange = { carbsText = it; goalsSavedMessage = false },
                         label = { Text("Carbs (g)") },
+                        supportingText = {
+                            val c = carbsText.toIntOrNull() ?: 0
+                            Text("${c * 4} kcal", style = MaterialTheme.typography.labelSmall)
+                        },
                         modifier = Modifier.weight(1f),
                         keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
                         singleLine = true
@@ -544,6 +587,10 @@ fun SettingsAndSyncScreen(
                         value = fatText,
                         onValueChange = { fatText = it; goalsSavedMessage = false },
                         label = { Text("Fat (g)") },
+                        supportingText = {
+                            val f = fatText.toIntOrNull() ?: 0
+                            Text("${f * 9} kcal", style = MaterialTheme.typography.labelSmall)
+                        },
                         modifier = Modifier.weight(1f),
                         keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
                         singleLine = true
@@ -558,6 +605,96 @@ fun SettingsAndSyncScreen(
                     )
                 }
 
+                // Macro vs Calorie Balance Validation Message & Calorie Reminder
+                if (hasEnteredValues && !doMacrosEqualCalories) {
+                    Spacer(modifier = Modifier.height(12.dp))
+                    Surface(
+                        shape = RoundedCornerShape(12.dp),
+                        color = MaterialTheme.colorScheme.errorContainer.copy(alpha = 0.5f),
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .testTag("macro_mismatch_warning")
+                    ) {
+                        Column(
+                            modifier = Modifier.padding(14.dp),
+                            verticalArrangement = Arrangement.spacedBy(8.dp)
+                        ) {
+                            Row(verticalAlignment = Alignment.CenterVertically) {
+                                Icon(
+                                    imageVector = Icons.Default.TrackChanges,
+                                    contentDescription = null,
+                                    tint = MaterialTheme.colorScheme.error,
+                                    modifier = Modifier.size(20.dp)
+                                )
+                                Spacer(modifier = Modifier.width(8.dp))
+                                Text(
+                                    text = "Macro calories do not match total calorie goal",
+                                    style = MaterialTheme.typography.titleSmall,
+                                    fontWeight = FontWeight.Bold,
+                                    color = MaterialTheme.colorScheme.onErrorContainer
+                                )
+                            }
+
+                            Text(
+                                text = "Your entered macros sum to $totalMacroKcal kcal (${if (diffKcal > 0) "+$diffKcal" else "$diffKcal"} kcal difference vs $targetCalories kcal target):\n" +
+                                    "• Protein: $proteinKcal kcal ($proteinGrams g × 4)\n" +
+                                    "• Carbohydrates: $carbsKcal kcal ($carbsGrams g × 4)\n" +
+                                    "• Fat: $fatKcal kcal ($fatGrams g × 9)",
+                                style = MaterialTheme.typography.bodySmall,
+                                color = MaterialTheme.colorScheme.onErrorContainer
+                            )
+
+                            HorizontalDivider(color = MaterialTheme.colorScheme.error.copy(alpha = 0.25f))
+
+                            Text(
+                                text = "📌 Calorie Reminder: Protein = 4 kcal/g • Carbohydrates = 4 kcal/g • Fat = 9 kcal/g",
+                                style = MaterialTheme.typography.labelSmall,
+                                fontWeight = FontWeight.SemiBold,
+                                color = MaterialTheme.colorScheme.onErrorContainer
+                            )
+
+                            OutlinedButton(
+                                onClick = {
+                                    caloriesText = totalMacroKcal.toString()
+                                    goalsSavedMessage = false
+                                },
+                                shape = RoundedCornerShape(8.dp),
+                                modifier = Modifier
+                                    .align(Alignment.End)
+                                    .testTag("auto_balance_calories_button")
+                            ) {
+                                Text("Auto-Set Calories to $totalMacroKcal kcal", style = MaterialTheme.typography.labelSmall)
+                            }
+                        }
+                    }
+                } else if (doMacrosEqualCalories) {
+                    Spacer(modifier = Modifier.height(10.dp))
+                    Surface(
+                        shape = RoundedCornerShape(10.dp),
+                        color = MaterialTheme.colorScheme.primaryContainer.copy(alpha = 0.45f),
+                        modifier = Modifier.fillMaxWidth()
+                    ) {
+                        Row(
+                            modifier = Modifier.padding(horizontal = 12.dp, vertical = 8.dp),
+                            verticalAlignment = Alignment.CenterVertically
+                        ) {
+                            Icon(
+                                imageVector = Icons.Default.VerifiedUser,
+                                contentDescription = null,
+                                tint = MaterialTheme.colorScheme.primary,
+                                modifier = Modifier.size(16.dp)
+                            )
+                            Spacer(modifier = Modifier.width(6.dp))
+                            Text(
+                                text = "✓ Macros balance to $targetCalories kcal ($proteinKcal kcal P • $carbsKcal kcal C • $fatKcal kcal F)",
+                                style = MaterialTheme.typography.labelSmall,
+                                color = MaterialTheme.colorScheme.onPrimaryContainer,
+                                fontWeight = FontWeight.Medium
+                            )
+                        }
+                    }
+                }
+
                 Spacer(modifier = Modifier.height(14.dp))
 
                 Button(
@@ -567,7 +704,8 @@ fun SettingsAndSyncScreen(
                         val crb = carbsText.toIntOrNull() ?: currentGoal.carbsTargetGrams
                         val f = fatText.toIntOrNull() ?: currentGoal.fatTargetGrams
                         val fib = fiberText.toIntOrNull() ?: currentGoal.fiberTargetGrams
-                        val w = waterText.toIntOrNull() ?: currentGoal.waterTargetMl
+                        val waterOz = waterText.toDoubleOrNull() ?: (currentGoal.waterTargetMl / 29.5735)
+                        val w = (waterOz * 29.5735).roundToInt()
                         onUpdateGoals(c, p, crb, f, fib, w)
                         goalsSavedMessage = true
                     },

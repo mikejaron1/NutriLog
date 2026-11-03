@@ -294,7 +294,7 @@ fun HistoryScreen(
                 HistoryKpiCard(
                     title = "On-Target",
                     value = "$daysWithinGoal/${activeDays.size.coerceAtLeast(1)}d",
-                    subtitle = "Avg H2O: ${avgWater}ml",
+                    subtitle = "Avg H2O: ${(avgWater / 29.5735).roundToInt()} oz",
                     accentColor = WaterColor,
                     modifier = Modifier.weight(1f)
                 )
@@ -1224,8 +1224,9 @@ private fun DailyHistoryRowCard(
                     Text("F: ${day.fat.roundToInt()}g", color = FatColor, style = MaterialTheme.typography.labelSmall)
                     Text("Fib: ${day.fiber.roundToInt()}g", color = FiberColor, style = MaterialTheme.typography.labelSmall)
                 }
+                val waterOz = (day.waterMl / 29.5735).roundToInt()
                 Text(
-                    text = "${day.waterMl} ml H2O",
+                    text = "$waterOz oz H2O",
                     style = MaterialTheme.typography.labelSmall,
                     color = WaterColor,
                     fontWeight = FontWeight.SemiBold
