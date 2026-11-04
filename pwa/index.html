@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
   <title>NutriLog: Macro & Food Tracker</title>
-  <meta name="description" content="Minimalist nutrition, macro, and water tracker with offline PWA support served directly from plotline.day">
+  <meta name="description" content="Minimalist nutrition, macro, and water tracker with offline PWA support">
   <meta name="theme-color" content="#0D47A1">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
@@ -50,7 +50,7 @@
           <img src="icons/icon-192.png" alt="NutriLog Logo" class="brand-logo">
           <div>
             <h1 class="brand-title">NutriLog</h1>
-            <span class="brand-sub">plotline.day</span>
+            <span class="brand-sub">Offline PWA</span>
           </div>
         </div>
         <div class="header-actions">
@@ -404,7 +404,7 @@
 
             <div class="sync-details">
               <div>Status: <span id="sync-status-msg">Idle (All data synchronized)</span></div>
-              <div>Domain: <strong>https://plotline.day</strong></div>
+              <div>App: <strong>NutriLog Web</strong></div>
             </div>
 
             <button id="btn-sync-now" class="btn btn-primary btn-block btn-wide-sync" onclick="app.syncNow()">
@@ -428,7 +428,7 @@
             <div class="version-icon">🛡️</div>
             <div>
               <strong>NutriLog PWA</strong>
-              <span class="text-sub">plotline.day • Version 1.0.1</span>
+              <span class="text-sub">NutriLog • Version 1.0.1</span>
             </div>
             <span class="badge badge-success">PWA Active</span>
           </div>
@@ -440,16 +440,16 @@
             </div>
             <div class="detail-row">
               <span>Offline Cache:</span>
-              <span id="cache-status-label">Offline Ready (plotline.day)</span>
+              <span id="cache-status-label">Offline Ready (NutriLog Cache)</span>
             </div>
             <div class="detail-row">
               <span>Hosting:</span>
-              <span>GitHub Pages (Custom Domain)</span>
+              <span>GitHub Pages</span>
             </div>
           </div>
 
           <button class="btn btn-primary btn-block" onclick="app.manualCheckUpdate()">
-            🔍 Check for Updates on plotline.day
+            🔍 Check for Updates
           </button>
 
           <div class="danger-zone">

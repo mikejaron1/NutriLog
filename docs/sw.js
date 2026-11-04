@@ -1,5 +1,5 @@
 // NutriLog Service Worker (sw.js)
-// Manages offline cache and seamless background updates for https://plotline.day
+// Manages offline cache and seamless background updates for NutriLog PWA
 
 const VERSION = '1.0.1';
 const CACHE_NAME = `nutrilog-pwa-v${VERSION}`;

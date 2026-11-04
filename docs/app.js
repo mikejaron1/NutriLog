@@ -1,5 +1,5 @@
 // NutriLog PWA Core Application Logic (app.js)
-// Served directly from https://plotline.day with offline Service Worker support
+// Offline Service Worker & local persistence support
 
 class NutriLogPWA {
   constructor() {
@@ -46,7 +46,7 @@ class NutriLogPWA {
     if ('serviceWorker' in navigator) {
       navigator.serviceWorker.register('./sw.js')
         .then((reg) => {
-          console.log('[PWA] Service Worker registered on plotline.day with scope:', reg.scope);
+          console.log('[PWA] Service Worker registered for NutriLog with scope:', reg.scope);
           this.swRegistration = reg;
 
           // Check if there is already a waiting service worker
@@ -81,10 +81,10 @@ class NutriLogPWA {
         }
       });
 
-      // Check plotline.day for update when app is opened or foregrounded
+      // Check for update when app is opened or foregrounded
       document.addEventListener('visibilitychange', () => {
         if (document.visibilityState === 'visible' && navigator.serviceWorker.controller) {
-          console.log('[PWA] App foregrounded, checking plotline.day for update in sw.js...');
+          console.log('[PWA] App foregrounded, checking for updates in sw.js...');
           if (this.swRegistration) {
             this.swRegistration.update();
           }
@@ -126,7 +126,7 @@ class NutriLogPWA {
     if (this.swRegistration) {
       this.swRegistration.update().then(() => {
         if (!this.swRegistration.waiting) {
-          alert('✓ You are running the latest version from plotline.day (Offline cache up to date).');
+          alert('✓ You are running the latest version of NutriLog (Offline cache up to date).');
         }
       });
     } else {
@@ -1038,7 +1038,7 @@ class NutriLogPWA {
   // --- Backup & Reset ---
   syncNow() {
     const statusEl = document.getElementById('sync-status-msg');
-    if (statusEl) statusEl.textContent = 'Syncing data to plotline.day storage...';
+    if (statusEl) statusEl.textContent = 'Syncing data to local storage...';
 
     setTimeout(() => {
       if (statusEl) statusEl.textContent = `Synchronized successfully at ${new Date().toLocaleTimeString()}`;
@@ -1050,7 +1050,7 @@ class NutriLogPWA {
     const backupData = {
       version: '1.0.1',
       exportedAt: new Date().toISOString(),
-      domain: 'https://plotline.day',
+      app: 'NutriLog',
       goals: this.getGoals(),
       foodLibrary: this.getFoodLibrary(),
       foodLogs: this.getFoodLogs(),
