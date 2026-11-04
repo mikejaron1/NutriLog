@@ -1,0 +1,614 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <title>NutriLog: Macro & Food Tracker</title>
+  <meta name="description" content="Minimalist nutrition, macro, and water tracker with offline PWA support served directly from plotline.day">
+  <meta name="theme-color" content="#0D47A1">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="NutriLog">
+
+  <link rel="manifest" href="manifest.webmanifest">
+  <link rel="icon" type="image/png" sizes="192x192" href="icons/icon-192.png">
+  <link rel="apple-touch-icon" href="icons/icon-192.png">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <!-- Background Update Notification Banner -->
+  <aside id="update-banner" class="update-banner hidden" role="alert" aria-live="polite">
+    <div class="update-banner-content">
+      <div class="update-icon">⚡</div>
+      <div class="update-text">
+        <strong>New version available!</strong>
+        <span>Tap update to refresh with the latest changes instantly.</span>
+      </div>
+      <button id="btn-update-now" class="btn btn-primary btn-sm">Update now</button>
+      <button id="btn-close-update" class="btn-icon" aria-label="Dismiss banner">&times;</button>
+    </div>
+  </aside>
+
+  <!-- PWA Install Prompt Bar -->
+  <aside id="install-banner" class="install-banner hidden">
+    <div class="install-banner-content">
+      <img src="icons/icon-192.png" alt="NutriLog" class="install-icon">
+      <div class="install-text">
+        <strong>Install NutriLog App</strong>
+        <span>Add to home screen for instant offline tracking</span>
+      </div>
+      <button id="btn-install-pwa" class="btn btn-accent btn-sm">Install</button>
+      <button id="btn-dismiss-install" class="btn-icon" aria-label="Dismiss install">&times;</button>
+    </div>
+  </aside>
+
+  <div id="app-container">
+    <!-- Header -->
+    <header class="app-header">
+      <div class="header-top">
+        <div class="brand">
+          <img src="icons/icon-192.png" alt="NutriLog Logo" class="brand-logo">
+          <div>
+            <h1 class="brand-title">NutriLog</h1>
+            <span class="brand-sub">plotline.day</span>
+          </div>
+        </div>
+        <div class="header-actions">
+          <span id="connection-pill" class="badge badge-success">Online</span>
+        </div>
+      </div>
+
+      <!-- Date Navigator (shown on Diary tab) -->
+      <nav id="date-navigator" class="date-nav" aria-label="Date navigation">
+        <button id="btn-prev-day" class="nav-arrow" aria-label="Previous day">&#8249;</button>
+        <div class="date-picker-wrap">
+          <button id="btn-date-display" class="date-label">Today, Nov 3</button>
+          <input type="date" id="native-date-picker" class="hidden-date-input" aria-label="Select date">
+        </div>
+        <button id="btn-next-day" class="nav-arrow" aria-label="Next day">&#8250;</button>
+        <button id="btn-today" class="btn-chip">Today</button>
+      </nav>
+    </header>
+
+    <!-- Main Content Panels -->
+    <main class="app-main">
+      <!-- TAB 1: DIARY -->
+      <section id="tab-diary" class="tab-pane active" aria-labelledby="nav-tab-diary">
+        <!-- Daily Macro Rings & Calorie Progress -->
+        <article class="card card-rings">
+          <div class="rings-grid">
+            <div class="calorie-ring-box">
+              <svg class="ring-svg" viewBox="0 0 120 120" aria-label="Calorie progress ring">
+                <circle class="ring-bg" cx="60" cy="60" r="48"></circle>
+                <circle id="calorie-ring-fill" class="ring-fill ring-calories" cx="60" cy="60" r="48"></circle>
+              </svg>
+              <div class="ring-center-text">
+                <span id="diary-remaining-calories" class="ring-val">2000</span>
+                <span class="ring-label">kcal left</span>
+              </div>
+            </div>
+            <div class="macro-breakdown-list">
+              <div class="macro-row">
+                <span class="macro-name color-protein">Protein</span>
+                <div class="progress-bar-wrap">
+                  <div id="bar-protein" class="progress-bar bar-protein" style="width: 0%"></div>
+                </div>
+                <span id="label-protein" class="macro-qty">0 / 150g</span>
+              </div>
+              <div class="macro-row">
+                <span class="macro-name color-carbs">Carbs</span>
+                <div class="progress-bar-wrap">
+                  <div id="bar-carbs" class="progress-bar bar-carbs" style="width: 0%"></div>
+                </div>
+                <span id="label-carbs" class="macro-qty">0 / 225g</span>
+              </div>
+              <div class="macro-row">
+                <span class="macro-name color-fat">Fat</span>
+                <div class="progress-bar-wrap">
+                  <div id="bar-fat" class="progress-bar bar-fat" style="width: 0%"></div>
+                </div>
+                <span id="label-fat" class="macro-qty">0 / 65g</span>
+              </div>
+              <div class="macro-row">
+                <span class="macro-name color-fiber">Fiber</span>
+                <div class="progress-bar-wrap">
+                  <div id="bar-fiber" class="progress-bar bar-fiber" style="width: 0%"></div>
+                </div>
+                <span id="label-fiber" class="macro-qty">0 / 30g</span>
+              </div>
+            </div>
+          </div>
+        </article>
+
+        <!-- Water Tracker (In OZ) -->
+        <article class="card card-water">
+          <div class="water-header">
+            <div class="water-title">
+              <span class="water-icon">💧</span>
+              <div>
+                <strong>Water Intake</strong>
+                <span id="water-intake-oz-display" class="text-sub">0 / 84 oz (0 ml)</span>
+              </div>
+            </div>
+            <div class="water-quick-buttons">
+              <button class="btn btn-water-sm" onclick="app.addWater(237)">+8 oz</button>
+              <button class="btn btn-water-sm" onclick="app.addWater(473)">+16 oz</button>
+              <button class="btn btn-water-sub" onclick="app.addWater(-237)">-8 oz</button>
+            </div>
+          </div>
+          <div class="progress-bar-wrap water-bar-wrap">
+            <div id="bar-water" class="progress-bar bar-water" style="width: 0%"></div>
+          </div>
+        </article>
+
+        <!-- Meal Category Lists -->
+        <div class="meals-container">
+          <!-- Breakfast -->
+          <article class="card card-meal" id="meal-card-BREAKFAST">
+            <div class="meal-header">
+              <div>
+                <h2 class="meal-name">🌅 Breakfast</h2>
+                <span id="kcal-BREAKFAST" class="meal-sub">0 kcal</span>
+              </div>
+              <button class="btn btn-outline btn-sm" onclick="app.openAddFoodModal('BREAKFAST')">+ Add</button>
+            </div>
+            <ul id="entries-BREAKFAST" class="meal-entries-list"></ul>
+          </article>
+
+          <!-- Lunch -->
+          <article class="card card-meal" id="meal-card-LUNCH">
+            <div class="meal-header">
+              <div>
+                <h2 class="meal-name">🥗 Lunch</h2>
+                <span id="kcal-LUNCH" class="meal-sub">0 kcal</span>
+              </div>
+              <button class="btn btn-outline btn-sm" onclick="app.openAddFoodModal('LUNCH')">+ Add</button>
+            </div>
+            <ul id="entries-LUNCH" class="meal-entries-list"></ul>
+          </article>
+
+          <!-- Dinner -->
+          <article class="card card-meal" id="meal-card-DINNER">
+            <div class="meal-header">
+              <div>
+                <h2 class="meal-name">🍽️ Dinner</h2>
+                <span id="kcal-DINNER" class="meal-sub">0 kcal</span>
+              </div>
+              <button class="btn btn-outline btn-sm" onclick="app.openAddFoodModal('DINNER')">+ Add</button>
+            </div>
+            <ul id="entries-DINNER" class="meal-entries-list"></ul>
+          </article>
+
+          <!-- Snacks -->
+          <article class="card card-meal" id="meal-card-SNACK">
+            <div class="meal-header">
+              <div>
+                <h2 class="meal-name">🍎 Snacks</h2>
+                <span id="kcal-SNACK" class="meal-sub">0 kcal</span>
+              </div>
+              <button class="btn btn-outline btn-sm" onclick="app.openAddFoodModal('SNACK')">+ Add</button>
+            </div>
+            <ul id="entries-SNACK" class="meal-entries-list"></ul>
+          </article>
+        </div>
+      </section>
+
+      <!-- TAB 2: HISTORY -->
+      <section id="tab-history" class="tab-pane" aria-labelledby="nav-tab-history">
+        <div class="history-controls">
+          <div>
+            <h2 class="section-title">Nutrition History</h2>
+            <span class="text-sub">Calorie and macro trends over time</span>
+          </div>
+          <div class="chip-group" role="radiogroup" aria-label="History date range">
+            <button class="chip active" onclick="app.setHistoryRange(7)">7D</button>
+            <button class="chip" onclick="app.setHistoryRange(14)">14D</button>
+            <button class="chip" onclick="app.setHistoryRange(30)">30D</button>
+          </div>
+        </div>
+
+        <!-- KPI Cards -->
+        <div class="kpi-grid">
+          <div class="card kpi-card">
+            <span class="kpi-title">Avg Calories</span>
+            <span id="kpi-avg-calories" class="kpi-val color-calories">0</span>
+            <span id="kpi-goal-calories" class="kpi-sub">Goal: 2000 kcal</span>
+          </div>
+          <div class="card kpi-card">
+            <span class="kpi-title">Avg Protein</span>
+            <span id="kpi-avg-protein" class="kpi-val color-protein">0g</span>
+            <span id="kpi-goal-protein" class="kpi-sub">Goal: 150g</span>
+          </div>
+          <div class="card kpi-card">
+            <span class="kpi-title">On-Target Days</span>
+            <span id="kpi-on-target" class="kpi-val color-water">0/0d</span>
+            <span id="kpi-avg-water" class="kpi-sub">Avg H2O: 0 oz</span>
+          </div>
+        </div>
+
+        <!-- Empty State (Shown when no historical logs exist) -->
+        <article id="history-empty-state" class="card card-empty-state">
+          <div class="empty-icon">📊</div>
+          <h3>No Nutrition History Yet</h3>
+          <p>You haven't logged any meals yet. When you add meals in your Daily Diary, your calorie trends, macro breakdowns, and charts will appear here automatically.</p>
+          <button class="btn btn-primary" onclick="app.switchTab('diary')">Open Daily Diary</button>
+        </article>
+
+        <!-- Charts Content (Shown when logs exist) -->
+        <div id="history-charts-content" class="charts-wrap hidden">
+          <!-- Calorie History Chart -->
+          <article class="card card-chart">
+            <div class="chart-header">
+              <div>
+                <strong>Calorie Intake Over Time</strong>
+                <span class="text-sub">Dashed line = daily target</span>
+              </div>
+              <button id="btn-toggle-calorie-chart" class="btn btn-outline btn-sm" onclick="app.toggleCalorieChartType()">Toggle Line/Bar</button>
+            </div>
+            <div class="chart-container">
+              <canvas id="canvas-calories-chart" width="600" height="240"></canvas>
+            </div>
+          </article>
+
+          <!-- Macro Trends Chart -->
+          <article class="card card-chart">
+            <div class="chart-header">
+              <div>
+                <strong>Macronutrients Over Time</strong>
+                <span class="text-sub">Protein, Carbs, Fat (grams)</span>
+              </div>
+            </div>
+            <div class="chart-container">
+              <canvas id="canvas-macros-chart" width="600" height="240"></canvas>
+            </div>
+          </article>
+
+          <!-- Daily Breakdown List -->
+          <div class="daily-breakdown-section">
+            <h3 class="section-title">Daily Log Breakdown</h3>
+            <div id="history-breakdown-list" class="breakdown-list"></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- TAB 3: AI ADVISOR -->
+      <section id="tab-advisor" class="tab-pane" aria-labelledby="nav-tab-advisor">
+        <h2 class="section-title">AI Nutrition Advisor</h2>
+        <span class="text-sub">Smart feedback based on your goals & logged intake</span>
+
+        <article class="card card-advisor">
+          <div class="advisor-status-box">
+            <div class="advisor-icon">🤖</div>
+            <div class="advisor-intro">
+              <strong>Personalized Daily Feedback</strong>
+              <span>Reviewing today's calories, protein, and water progress.</span>
+            </div>
+          </div>
+          <div id="advisor-advice-body" class="advisor-advice-body">
+            <p>Log your meals for today in the <strong>Diary</strong> to receive tailored guidance on balancing macros, hitting your protein target, and managing calorie density.</p>
+          </div>
+          <button class="btn btn-primary btn-block" onclick="app.refreshAiAdvice()">Analyze Today's Nutrition</button>
+        </article>
+      </section>
+
+      <!-- TAB 4: FAVORITES & RECENTS -->
+      <section id="tab-favorites" class="tab-pane" aria-labelledby="nav-tab-favorites">
+        <div class="fav-header">
+          <div>
+            <h2 class="section-title">Foods Library</h2>
+            <span class="text-sub">Favorites & staple foods for quick logging</span>
+          </div>
+          <button class="btn btn-primary btn-sm" onclick="app.openCustomFoodModal()">+ Create Food</button>
+        </div>
+
+        <div class="search-input-wrap">
+          <input type="text" id="fav-search-input" class="form-input" placeholder="Search saved & staple foods..." oninput="app.filterFavorites(this.value)">
+        </div>
+
+        <div id="favorites-list" class="favorites-grid"></div>
+      </section>
+
+      <!-- TAB 5: SETTINGS & GOALS -->
+      <section id="tab-settings" class="tab-pane" aria-labelledby="nav-tab-settings">
+        <!-- Daily Nutritional Goals Card -->
+        <article class="card card-goals">
+          <div class="goals-card-header">
+            <span class="goals-icon">🎯</span>
+            <div>
+              <strong>Daily Nutritional Goals</strong>
+              <span class="text-sub">Set targets in calories, macros, and water in OZ</span>
+            </div>
+          </div>
+
+          <!-- Dynamic Real-Time Macro Calorie Validation Alert -->
+          <aside id="macro-validation-alert" class="alert-box alert-warning hidden" role="alert">
+            <div class="alert-header">
+              <span class="alert-icon">⚠️</span>
+              <strong id="macro-validation-title">Macro calories do not match total calorie goal</strong>
+            </div>
+            <p id="macro-validation-desc" class="alert-body"></p>
+            <div class="alert-reminder">
+              <strong>📌 Calorie Reminder:</strong> Protein = 4 kcal/g • Carbohydrates = 4 kcal/g • Fat = 9 kcal/g
+            </div>
+            <button id="btn-auto-balance" class="btn btn-sm btn-outline" onclick="app.autoSetCaloriesToMatchMacros()">Auto-Set Calorie Goal to Match Macros</button>
+          </aside>
+
+          <aside id="macro-validation-success" class="alert-box alert-success hidden">
+            <span>✓ Macros balance to exact calorie goal (P × 4 + C × 4 + F × 9)</span>
+          </aside>
+
+          <form id="form-goals" class="goals-form" onsubmit="event.preventDefault(); app.saveGoals();">
+            <div class="form-row">
+              <div class="form-group">
+                <label for="goal-calories">Calories (kcal)</label>
+                <input type="number" id="goal-calories" class="form-input" required min="500" max="10000" oninput="app.checkMacroBalance()">
+              </div>
+              <div class="form-group">
+                <label for="goal-water-oz">Water Target (oz)</label>
+                <input type="number" id="goal-water-oz" class="form-input" required min="10" max="300" oninput="app.updateWaterOzHelper(this.value)">
+                <span id="goal-water-ml-helper" class="input-helper">≈ 2484 ml</span>
+              </div>
+            </div>
+
+            <div class="form-row">
+              <div class="form-group">
+                <label for="goal-protein">Protein (g)</label>
+                <input type="number" id="goal-protein" class="form-input" required min="0" max="600" oninput="app.checkMacroBalance()">
+                <span id="helper-protein-kcal" class="input-helper">0 kcal</span>
+              </div>
+              <div class="form-group">
+                <label for="goal-carbs">Carbs (g)</label>
+                <input type="number" id="goal-carbs" class="form-input" required min="0" max="1000" oninput="app.checkMacroBalance()">
+                <span id="helper-carbs-kcal" class="input-helper">0 kcal</span>
+              </div>
+            </div>
+
+            <div class="form-row">
+              <div class="form-group">
+                <label for="goal-fat">Fat (g)</label>
+                <input type="number" id="goal-fat" class="form-input" required min="0" max="400" oninput="app.checkMacroBalance()">
+                <span id="helper-fat-kcal" class="input-helper">0 kcal</span>
+              </div>
+              <div class="form-group">
+                <label for="goal-fiber">Fiber (g)</label>
+                <input type="number" id="goal-fiber" class="form-input" required min="0" max="100">
+                <span class="input-helper">Daily minimum</span>
+              </div>
+            </div>
+
+            <button type="submit" class="btn btn-primary btn-block">Save Nutritional Goals</button>
+            <div id="goals-saved-toast" class="toast-success hidden">✓ Goals saved successfully!</div>
+          </form>
+        </article>
+
+        <!-- Google Drive Backup & Sync Card -->
+        <article class="card card-sync">
+          <div class="sync-header">
+            <span class="sync-icon">☁️</span>
+            <div>
+              <strong>Google Drive & Local Data Sync</strong>
+              <span class="text-sub">Instant backup & cross-device restore</span>
+            </div>
+          </div>
+
+          <!-- Wi-Fi Status & Wide Sync Button -->
+          <div class="wifi-panel">
+            <div class="wifi-panel-header">
+              <span id="wifi-icon" class="wifi-badge-icon">📶</span>
+              <div class="wifi-panel-text">
+                <strong id="wifi-status-title">Wi-Fi Connected • Ready to Auto-Upload</strong>
+                <span id="wifi-status-sub" class="text-sub">Changes sync to your Google Drive backup</span>
+              </div>
+              <span id="queue-badge" class="badge badge-warning hidden">0 Queued</span>
+            </div>
+
+            <div class="sync-details">
+              <div>Status: <span id="sync-status-msg">Idle (All data synchronized)</span></div>
+              <div>Domain: <strong>https://plotline.day</strong></div>
+            </div>
+
+            <button id="btn-sync-now" class="btn btn-primary btn-block btn-wide-sync" onclick="app.syncNow()">
+              🔄 Sync Now to Google Drive
+            </button>
+          </div>
+
+          <!-- Backup JSON Export / Import -->
+          <div class="backup-actions">
+            <button class="btn btn-outline" onclick="app.exportBackup()">📥 Export Backup (JSON)</button>
+            <label class="btn btn-outline file-label">
+              📤 Import Backup (JSON)
+              <input type="file" id="import-backup-file" accept=".json" class="hidden" onchange="app.importBackup(event)">
+            </label>
+          </div>
+        </article>
+
+        <!-- App Version, Offline Service Worker & Update Status Card -->
+        <article class="card card-version">
+          <div class="version-header">
+            <div class="version-icon">🛡️</div>
+            <div>
+              <strong>NutriLog PWA</strong>
+              <span class="text-sub">plotline.day • Version 1.0.1</span>
+            </div>
+            <span class="badge badge-success">PWA Active</span>
+          </div>
+
+          <div class="version-details">
+            <div class="detail-row">
+              <span>Service Worker Status:</span>
+              <span id="sw-status-label" class="badge badge-outline">Installed & Active</span>
+            </div>
+            <div class="detail-row">
+              <span>Offline Cache:</span>
+              <span id="cache-status-label">Offline Ready (plotline.day)</span>
+            </div>
+            <div class="detail-row">
+              <span>Hosting:</span>
+              <span>GitHub Pages (Custom Domain)</span>
+            </div>
+          </div>
+
+          <button class="btn btn-primary btn-block" onclick="app.manualCheckUpdate()">
+            🔍 Check for Updates on plotline.day
+          </button>
+
+          <div class="danger-zone">
+            <button class="btn btn-danger-outline btn-block" onclick="app.openResetModal()">
+              🗑️ Reset All Meal & Water Logs
+            </button>
+          </div>
+        </article>
+      </section>
+    </main>
+
+    <!-- Bottom Navigation Bar (5 tabs) -->
+    <nav class="bottom-nav" aria-label="Main navigation">
+      <button class="nav-btn active" data-tab="diary" onclick="app.switchTab('diary')" id="nav-tab-diary">
+        <span class="nav-icon">📖</span>
+        <span class="nav-label">Diary</span>
+      </button>
+      <button class="nav-btn" data-tab="history" onclick="app.switchTab('history')" id="nav-tab-history">
+        <span class="nav-icon">📊</span>
+        <span class="nav-label">History</span>
+      </button>
+      <button class="nav-btn" data-tab="advisor" onclick="app.switchTab('advisor')" id="nav-tab-advisor">
+        <span class="nav-icon">🤖</span>
+        <span class="nav-label">Advisor</span>
+      </button>
+      <button class="nav-btn" data-tab="favorites" onclick="app.switchTab('favorites')" id="nav-tab-favorites">
+        <span class="nav-icon">⭐</span>
+        <span class="nav-label">Favorites</span>
+      </button>
+      <button class="nav-btn" data-tab="settings" onclick="app.switchTab('settings')" id="nav-tab-settings">
+        <span class="nav-icon">⚙️</span>
+        <span class="nav-label">Sync</span>
+      </button>
+    </nav>
+  </div>
+
+  <!-- Modal: Add Food / Search -->
+  <div id="modal-add-food" class="modal-overlay hidden" role="dialog" aria-modal="true">
+    <div class="modal-card">
+      <div class="modal-header">
+        <h3 id="modal-meal-title">Add Food to Breakfast</h3>
+        <button class="btn-icon" onclick="app.closeModal('modal-add-food')" aria-label="Close modal">&times;</button>
+      </div>
+      <div class="modal-body">
+        <div class="search-input-wrap">
+          <input type="text" id="food-search-box" class="form-input" placeholder="Search food, staple, or barcode..." oninput="app.searchFoods(this.value)">
+        </div>
+        <div class="quick-scanner-shortcuts">
+          <button class="btn btn-outline btn-sm" onclick="app.openBarcodeModal()">📷 Scan Barcode</button>
+          <button class="btn btn-outline btn-sm" onclick="app.openAiRecipeModal()">✨ Scan Label / Photo</button>
+        </div>
+        <div id="food-search-results" class="search-results-list"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal: Create Custom Food -->
+  <div id="modal-custom-food" class="modal-overlay hidden" role="dialog" aria-modal="true">
+    <div class="modal-card">
+      <div class="modal-header">
+        <h3>Create Custom Food</h3>
+        <button class="btn-icon" onclick="app.closeModal('modal-custom-food')" aria-label="Close modal">&times;</button>
+      </div>
+      <form id="form-custom-food" onsubmit="event.preventDefault(); app.saveCustomFood();">
+        <div class="modal-body form-grid">
+          <div class="form-group full-width">
+            <label for="custom-name">Food Name</label>
+            <input type="text" id="custom-name" class="form-input" required placeholder="e.g. Greek Yogurt 2%">
+          </div>
+          <div class="form-group">
+            <label for="custom-brand">Brand</label>
+            <input type="text" id="custom-brand" class="form-input" placeholder="e.g. Fage">
+          </div>
+          <div class="form-group">
+            <label for="custom-serving-size">Serving Size (g)</label>
+            <input type="number" id="custom-serving-size" class="form-input" required value="100">
+          </div>
+          <div class="form-group">
+            <label for="custom-calories">Calories (kcal)</label>
+            <input type="number" id="custom-calories" class="form-input" required min="0">
+          </div>
+          <div class="form-group">
+            <label for="custom-protein">Protein (g)</label>
+            <input type="number" id="custom-protein" class="form-input" required min="0">
+          </div>
+          <div class="form-group">
+            <label for="custom-carbs">Carbs (g)</label>
+            <input type="number" id="custom-carbs" class="form-input" required min="0">
+          </div>
+          <div class="form-group">
+            <label for="custom-fat">Fat (g)</label>
+            <input type="number" id="custom-fat" class="form-input" required min="0">
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-outline" onclick="app.closeModal('modal-custom-food')">Cancel</button>
+          <button type="submit" class="btn btn-primary">Save to Library</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Modal: Barcode Scanner -->
+  <div id="modal-barcode" class="modal-overlay hidden" role="dialog" aria-modal="true">
+    <div class="modal-card">
+      <div class="modal-header">
+        <h3>Barcode Scanner</h3>
+        <button class="btn-icon" onclick="app.closeModal('modal-barcode')" aria-label="Close modal">&times;</button>
+      </div>
+      <div class="modal-body barcode-modal-body">
+        <p class="text-sub">Enter a 12-13 digit UPC/EAN or test barcode:</p>
+        <div class="barcode-input-row">
+          <input type="text" id="barcode-manual-input" class="form-input" placeholder="e.g. 011110825316" inputmode="numeric">
+          <button class="btn btn-primary" onclick="app.lookupBarcode(document.getElementById('barcode-manual-input').value)">Lookup</button>
+        </div>
+        <div class="barcode-examples">
+          <span>Common examples:</span>
+          <button class="chip" onclick="app.lookupBarcode('737628064502')">Thai Noodles</button>
+          <button class="chip" onclick="app.lookupBarcode('041570054238')">Oat Milk</button>
+        </div>
+        <div id="barcode-result-area" class="barcode-result-area hidden"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal: AI Recipe / Label Scanner -->
+  <div id="modal-ai-scan" class="modal-overlay hidden" role="dialog" aria-modal="true">
+    <div class="modal-card">
+      <div class="modal-header">
+        <h3>AI Nutrition Label / Meal Scanner</h3>
+        <button class="btn-icon" onclick="app.closeModal('modal-ai-scan')" aria-label="Close modal">&times;</button>
+      </div>
+      <div class="modal-body">
+        <p class="text-sub">Describe what you ate or paste nutrition label values to estimate macros:</p>
+        <textarea id="ai-scan-description" class="form-input textarea" rows="3" placeholder="e.g. 2 scrambled eggs with half an avocado and 1 slice of sourdough toast"></textarea>
+        <button class="btn btn-primary btn-block" onclick="app.analyzeAiMeal()">✨ Estimate Nutrition</button>
+        <div id="ai-scan-results" class="ai-scan-results hidden"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal: Reset Confirmation -->
+  <div id="modal-reset" class="modal-overlay hidden" role="dialog" aria-modal="true">
+    <div class="modal-card">
+      <div class="modal-header">
+        <h3>Clear All Food & Water History?</h3>
+        <button class="btn-icon" onclick="app.closeModal('modal-reset')" aria-label="Close modal">&times;</button>
+      </div>
+      <div class="modal-body">
+        <p>This will permanently delete all logged meal entries and water records from your device's history, leaving an empty slate.</p>
+        <p class="text-sub">Your target goals and custom saved foods in your library will NOT be deleted.</p>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-outline" onclick="app.closeModal('modal-reset')">Cancel</button>
+        <button class="btn btn-danger" onclick="app.confirmResetHistory()">Clear All Logs</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>
