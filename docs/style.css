@@ -913,3 +913,229 @@ body {
 .color-water { color: var(--water-color); }
 .text-sub { color: var(--text-sub); font-size: 12px; }
 .hidden { display: none !important; }
+
+/* Floating Action Button (FAB) */
+.fab-container {
+  position: fixed;
+  bottom: calc(72px + env(safe-area-inset-bottom, 0px));
+  right: 20px;
+  z-index: 100;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 12px;
+}
+
+.fab-main {
+  width: 58px;
+  height: 58px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--primary) 0%, #1565C0 100%);
+  color: #FFFFFF;
+  border: none;
+  box-shadow: 0 4px 16px rgba(13, 71, 161, 0.45);
+  font-size: 28px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: transform 0.2s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.2s ease;
+}
+
+.fab-main:active {
+  transform: scale(0.92);
+}
+
+.fab-main.active {
+  transform: rotate(45deg);
+  background: #D32F2F;
+}
+
+.fab-menu {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 10px;
+  transition: opacity 0.2s ease, transform 0.2s ease;
+}
+
+.fab-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: var(--surface-color);
+  color: var(--text-color);
+  border: 1px solid var(--outline-color);
+  padding: 8px 14px;
+  border-radius: 24px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  cursor: pointer;
+  font-size: 13px;
+  font-weight: 600;
+  white-space: nowrap;
+  animation: slideInRight 0.18s ease-out;
+}
+
+.fab-item:active {
+  background: var(--surface-variant);
+  transform: scale(0.97);
+}
+
+.fab-item-icon {
+  font-size: 16px;
+}
+
+@keyframes slideInRight {
+  from { opacity: 0; transform: translateX(20px); }
+  to { opacity: 1; transform: translateX(0); }
+}
+
+/* Modal Sub-Tabs */
+.modal-subtabs {
+  display: flex;
+  border-bottom: 1px solid var(--outline-color);
+  margin-bottom: 12px;
+  gap: 4px;
+  overflow-x: auto;
+}
+
+.subtab-btn {
+  background: none;
+  border: none;
+  border-bottom: 2px solid transparent;
+  padding: 8px 12px;
+  color: var(--text-sub);
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.subtab-btn.active {
+  color: var(--primary);
+  border-bottom-color: var(--primary);
+}
+
+/* Camera Barcode Scanner */
+.camera-scanner-wrap {
+  position: relative;
+  width: 100%;
+  height: 260px;
+  background: #000000;
+  border-radius: var(--radius-md);
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 14px;
+}
+
+.camera-preview {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.scanner-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.scanner-reticle {
+  width: 220px;
+  height: 140px;
+  border: 2px solid rgba(255, 255, 255, 0.7);
+  border-radius: 12px;
+  position: relative;
+  box-shadow: 0 0 0 1000px rgba(0, 0, 0, 0.5);
+}
+
+.scanner-reticle::before {
+  content: '';
+  position: absolute;
+  top: -2px; left: -2px; right: -2px; bottom: -2px;
+  border: 2px solid #00E676;
+  border-radius: 12px;
+  clip-path: polygon(0 0, 25px 0, 25px 25px, 0 25px,
+                     100% 0, 100% 25px, calc(100% - 25px) 25px, calc(100% - 25px) 0,
+                     0 100%, 0 calc(100% - 25px), 25px calc(100% - 25px), 25px 100%,
+                     100% 100%, calc(100% - 25px) 100%, calc(100% - 25px) calc(100% - 25px), 100% calc(100% - 25px));
+}
+
+.scanner-laser {
+  position: absolute;
+  width: 100%;
+  height: 2px;
+  background: #FF1744;
+  box-shadow: 0 0 8px #FF1744;
+  top: 0;
+  animation: scanLaser 2s infinite ease-in-out alternate;
+}
+
+@keyframes scanLaser {
+  0% { top: 10%; }
+  100% { top: 90%; }
+}
+
+.camera-controls {
+  display: flex;
+  gap: 10px;
+  margin-top: 10px;
+  justify-content: center;
+}
+
+/* Serving Adjuster Card */
+.serving-adjuster-card {
+  background: var(--surface-variant);
+  border: 1px solid var(--outline-color);
+  border-radius: var(--radius-md);
+  padding: 14px;
+  margin: 12px 0;
+}
+
+.serving-adjuster-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  margin-bottom: 10px;
+}
+
+.serving-adjuster-macros {
+  display: flex;
+  gap: 12px;
+  font-size: 12px;
+  margin-top: 8px;
+}
+
+/* Delete Favorite Button */
+.btn-delete-fav {
+  background: none;
+  border: none;
+  color: #D32F2F;
+  font-size: 18px;
+  padding: 6px;
+  cursor: pointer;
+  border-radius: 6px;
+  transition: background 0.2s;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.btn-delete-fav:active {
+  background: rgba(211, 47, 47, 0.15);
+}
+
+.fav-card-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+

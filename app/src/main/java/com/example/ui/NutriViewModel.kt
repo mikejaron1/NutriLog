@@ -280,6 +280,17 @@ class NutriViewModel(application: Application) : AndroidViewModel(application) {
         }
     }
 
+    fun deleteFoodItem(foodItem: FoodItem) {
+        viewModelScope.launch {
+            try {
+                repository.deleteFoodItem(foodItem)
+                triggerAutoSyncAfterEntry("Deleted food item: ${foodItem.name}")
+            } catch (e: Exception) {
+                Log.e(TAG, "Failed to delete food item", e)
+            }
+        }
+    }
+
     fun clearAllHistoryLogs() {
         viewModelScope.launch {
             try {

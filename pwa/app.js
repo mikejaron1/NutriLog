@@ -12,6 +12,11 @@ class NutriLogPWA {
     this.historyDaysRange = 7;
     this.calorieChartIsLine = false;
     this.currentMealType = 'BREAKFAST';
+    this.currentModalSubTab = 'all';
+    this.cameraStream = null;
+    this.barcodeInterval = null;
+    this.activeAdjustFood = null;
+    this.searchDebounceTimer = null;
     this.newWorkerWaiting = null;
     this.deferredInstallPrompt = null;
 
@@ -815,73 +820,492 @@ class NutriLogPWA {
     this.render();
   }
 
-  // --- Foods Library & Modals ---
+  // --- FAB (Floating Action Button) ---
+  toggleFab() {
+    const menu = document.getElementById('fab-menu');
+    const fabBtn = document.getElementById('btn-main-fab');
+    if (!menu || !fabBtn) return;
+    const isHidden = menu.classList.contains('hidden');
+    if (isHidden) {
+      menu.classList.remove('hidden');
+      fabBtn.classList.add('active');
+    } else {
+      menu.classList.add('hidden');
+      fabBtn.classList.remove('active');
+    }
+  }
+
+  closeFab() {
+    const menu = document.getElementById('fab-menu');
+    const fabBtn = document.getElementById('btn-main-fab');
+    if (menu) menu.classList.add('hidden');
+    if (fabBtn) fabBtn.classList.remove('active');
+  }
+
+  // --- Foods Library & Favorites with Deletion ---
   renderFavorites() {
     const foods = this.getFoodLibrary();
     const container = document.getElementById('favorites-list');
     if (!container) return;
 
+    if (foods.length === 0) {
+      container.innerHTML = `
+        <div class="card card-empty-state" style="padding: 24px; text-align: center;">
+          <div style="font-size: 36px; margin-bottom: 8px;">⭐</div>
+          <h4>No Foods in Library</h4>
+          <p class="text-sub">Add foods via Search, Barcode Scanner, or the "Create Food" button above.</p>
+        </div>
+      `;
+      return;
+    }
+
     container.innerHTML = foods.map(item => `
       <div class="card" style="padding: 12px; margin-bottom: 8px;">
         <div style="display: flex; justify-content: space-between; align-items: center;">
-          <div>
-            <strong>${this.escapeHtml(item.name)}</strong>
+          <div style="flex: 1; cursor: pointer;" onclick="app.openAddFoodModalWithItem(${this.escapeJson(item)})">
+            <div style="display: flex; align-items: center; gap: 6px;">
+              <strong>${this.escapeHtml(item.name)}</strong>
+              ${item.favorite ? '<span style="color: #FFB300; font-size: 13px;">★</span>' : ''}
+            </div>
             <div class="text-sub">${item.brand || 'Library'} • ${item.serving}${item.unit} • ${item.calories} kcal</div>
             <div class="text-sub" style="font-size: 11px;">P: ${item.protein}g • C: ${item.carbs}g • F: ${item.fat}g</div>
           </div>
-          <button class="btn btn-primary btn-sm" onclick="app.logFood(${this.escapeJson(item)}, 'BREAKFAST')">+ Log</button>
+          <div class="fav-card-actions">
+            <button class="btn btn-outline btn-sm" onclick="app.openAddFoodModalWithItem(${this.escapeJson(item)})">+ Log</button>
+            <button class="btn-delete-fav" onclick="app.deleteFoodFromLibrary('${item.id}', '${this.escapeHtml(item.name).replace(/'/g, "\\'")}')" title="Delete from Library" aria-label="Delete ${this.escapeHtml(item.name)}">
+              🗑️
+            </button>
+          </div>
         </div>
       </div>
     `).join('');
   }
 
+  deleteFoodFromLibrary(id, name) {
+    if (!confirm(`Delete "${name || 'this food'}" from your library?`)) {
+      return;
+    }
+    let library = this.getFoodLibrary();
+    library = library.filter(f => f.id !== id);
+    this.saveFoodLibrary(library);
+    this.renderFavorites();
+    if (this.currentModalSubTab === 'favorites') {
+      this.renderModalFavorites();
+    }
+  }
+
+  toggleFoodFavorite(id) {
+    const library = this.getFoodLibrary();
+    const item = library.find(f => f.id === id);
+    if (item) {
+      item.favorite = !item.favorite;
+      this.saveFoodLibrary(library);
+      this.renderFavorites();
+    }
+  }
+
   filterFavorites(query) {
-    const q = query.toLowerCase();
+    const q = (query || '').toLowerCase();
     const foods = this.getFoodLibrary().filter(f => f.name.toLowerCase().includes(q) || (f.brand && f.brand.toLowerCase().includes(q)));
     const container = document.getElementById('favorites-list');
     if (!container) return;
 
+    if (foods.length === 0) {
+      container.innerHTML = `<div class="text-sub" style="text-align: center; padding: 16px;">No foods found matching "${query}".</div>`;
+      return;
+    }
+
     container.innerHTML = foods.map(item => `
       <div class="card" style="padding: 12px; margin-bottom: 8px;">
         <div style="display: flex; justify-content: space-between; align-items: center;">
-          <div>
-            <strong>${this.escapeHtml(item.name)}</strong>
+          <div style="flex: 1; cursor: pointer;" onclick="app.openAddFoodModalWithItem(${this.escapeJson(item)})">
+            <div style="display: flex; align-items: center; gap: 6px;">
+              <strong>${this.escapeHtml(item.name)}</strong>
+              ${item.favorite ? '<span style="color: #FFB300; font-size: 13px;">★</span>' : ''}
+            </div>
             <div class="text-sub">${item.brand || 'Library'} • ${item.serving}${item.unit} • ${item.calories} kcal</div>
+            <div class="text-sub" style="font-size: 11px;">P: ${item.protein}g • C: ${item.carbs}g • F: ${item.fat}g</div>
           </div>
-          <button class="btn btn-primary btn-sm" onclick="app.logFood(${this.escapeJson(item)}, 'BREAKFAST')">+ Log</button>
+          <div class="fav-card-actions">
+            <button class="btn btn-outline btn-sm" onclick="app.openAddFoodModalWithItem(${this.escapeJson(item)})">+ Log</button>
+            <button class="btn-delete-fav" onclick="app.deleteFoodFromLibrary('${item.id}', '${this.escapeHtml(item.name).replace(/'/g, "\\'")}')" title="Delete">
+              🗑️
+            </button>
+          </div>
         </div>
       </div>
     `).join('');
   }
 
+  // --- Add Food Modal & Sub-Tabs ---
   openAddFoodModal(mealType) {
-    this.currentMealType = mealType;
-    document.getElementById('modal-meal-title').textContent = `Add Food to ${mealType}`;
-    document.getElementById('modal-add-food').classList.remove('hidden');
-    this.searchFoods('');
+    this.closeFab();
+    this.currentMealType = mealType || this.currentMealType || 'BREAKFAST';
+    const select = document.getElementById('modal-meal-select');
+    if (select) select.value = this.currentMealType;
+
+    const modal = document.getElementById('modal-add-food');
+    if (modal) modal.classList.remove('hidden');
+
+    this.closeServingAdjuster();
+    this.switchModalSubTab('all');
+  }
+
+  openAddFoodModalWithItem(item) {
+    this.openAddFoodModal(this.currentMealType);
+    this.selectFoodForAdjust(item);
+  }
+
+  switchModalSubTab(tab) {
+    this.currentModalSubTab = tab;
+    ['all', 'favs', 'recents'].forEach(t => {
+      const btn = document.getElementById(`subtab-${t}`);
+      if (btn) btn.classList.remove('active');
+    });
+
+    const activeBtn = document.getElementById(tab === 'favorites' ? 'subtab-favs' : tab === 'recents' ? 'subtab-recents' : 'subtab-all');
+    if (activeBtn) activeBtn.classList.add('active');
+
+    const searchBox = document.getElementById('food-search-box');
+
+    if (tab === 'favorites') {
+      if (searchBox) searchBox.value = '';
+      this.renderModalFavorites();
+    } else if (tab === 'recents') {
+      if (searchBox) searchBox.value = '';
+      this.renderModalRecents();
+    } else {
+      const q = searchBox ? searchBox.value : '';
+      this.searchFoods(q);
+    }
+  }
+
+  renderModalFavorites() {
+    const container = document.getElementById('food-search-results');
+    const loading = document.getElementById('food-search-loading');
+    if (loading) loading.classList.add('hidden');
+    if (!container) return;
+
+    const favs = this.getFoodLibrary().filter(f => f.favorite);
+    if (favs.length === 0) {
+      container.innerHTML = `<div class="text-sub" style="text-align: center; padding: 20px;">No favorites saved yet. Search any food or tap custom food to create one!</div>`;
+      return;
+    }
+
+    container.innerHTML = favs.map(item => this.renderSearchResultItem(item, '⭐ Favorite')).join('');
+  }
+
+  renderModalRecents() {
+    const container = document.getElementById('food-search-results');
+    const loading = document.getElementById('food-search-loading');
+    if (loading) loading.classList.add('hidden');
+    if (!container) return;
+
+    const allLogs = this.getFoodLogs();
+    const seen = new Set();
+    const recents = [];
+
+    for (let i = allLogs.length - 1; i >= 0 && recents.length < 15; i--) {
+      const log = allLogs[i];
+      if (!seen.has(log.name)) {
+        seen.add(log.name);
+        recents.push({
+          id: 'recent_' + log.id,
+          name: log.name,
+          brand: log.brand || 'Logged',
+          serving: 100,
+          unit: 'g',
+          calories: log.calories,
+          protein: log.proteinGrams,
+          carbs: log.carbsGrams,
+          fat: log.fatGrams,
+          fiber: 0
+        });
+      }
+    }
+
+    if (recents.length === 0) {
+      container.innerHTML = `<div class="text-sub" style="text-align: center; padding: 20px;">No recent foods logged yet today.</div>`;
+      return;
+    }
+
+    container.innerHTML = recents.map(item => this.renderSearchResultItem(item, '🕒 Recent')).join('');
+  }
+
+  onSearchInput(value) {
+    clearTimeout(this.searchDebounceTimer);
+    this.searchDebounceTimer = setTimeout(() => {
+      this.searchFoods(value);
+    }, 280);
   }
 
   searchFoods(query) {
-    const q = (query || '').toLowerCase();
-    const foods = this.getFoodLibrary().filter(f => !q || f.name.toLowerCase().includes(q));
+    const q = (query || '').trim().toLowerCase();
     const container = document.getElementById('food-search-results');
+    const loading = document.getElementById('food-search-loading');
     if (!container) return;
 
-    container.innerHTML = foods.map(item => `
-      <div class="meal-entry-item" style="cursor: pointer;" onclick="app.logFood(${this.escapeJson(item)}, '${this.currentMealType}')">
+    const localMatches = this.getFoodLibrary().filter(f => !q || f.name.toLowerCase().includes(q) || (f.brand && f.brand.toLowerCase().includes(q)));
+
+    if (!q || q.length < 2) {
+      if (loading) loading.classList.add('hidden');
+      if (localMatches.length === 0) {
+        container.innerHTML = `<div class="text-sub" style="text-align: center; padding: 20px;">Type at least 2 letters to search the world food database...</div>`;
+      } else {
+        container.innerHTML = localMatches.map(item => this.renderSearchResultItem(item, '⭐ Library')).join('');
+      }
+      return;
+    }
+
+    // Show local results first
+    let html = localMatches.map(item => this.renderSearchResultItem(item, '⭐ Library')).join('');
+    container.innerHTML = html;
+
+    // Fetch OpenFoodFacts online database for global food items
+    if (loading) loading.classList.remove('hidden');
+
+    fetch(`https://world.openfoodfacts.org/cgi/search.pl?search_terms=${encodeURIComponent(q)}&search_simple=1&action=process&json=1&page_size=20`)
+      .then(res => res.json())
+      .then(data => {
+        if (loading) loading.classList.add('hidden');
+        if (data && data.products && data.products.length > 0) {
+          const apiItems = data.products
+            .filter(p => p.product_name && p.nutriments)
+            .map(p => {
+              const nut = p.nutriments || {};
+              const cal = Math.round(nut['energy-kcal_100g'] || nut['energy-kcal'] || 0);
+              return {
+                id: 'off_' + (p.code || Math.random().toString(36).slice(2)),
+                name: p.product_name || 'Food Item',
+                brand: p.brands || 'Store Item',
+                serving: 100,
+                unit: 'g',
+                calories: cal,
+                protein: Math.round((nut.proteins_100g || 0) * 10) / 10,
+                carbs: Math.round((nut.carbohydrates_100g || 0) * 10) / 10,
+                fat: Math.round((nut.fat_100g || 0) * 10) / 10,
+                fiber: Math.round((nut.fiber_100g || 0) * 10) / 10
+              };
+            })
+            .filter(item => item.calories > 0 || item.protein > 0);
+
+          if (apiItems.length > 0) {
+            const apiHtml = apiItems.map(item => this.renderSearchResultItem(item, '🌐 Online DB')).join('');
+            container.innerHTML = html + apiHtml;
+          }
+        }
+      })
+      .catch(err => {
+        if (loading) loading.classList.add('hidden');
+        console.warn('Food search API failed, showing local results:', err);
+      });
+  }
+
+  renderSearchResultItem(item, badge) {
+    return `
+      <div class="meal-entry-item" style="cursor: pointer;" onclick="app.selectFoodForAdjust(${this.escapeJson(item)})">
         <div class="entry-left">
-          <span class="entry-name">${this.escapeHtml(item.name)}</span>
-          <span class="entry-macros">${item.serving}${item.unit} • P: ${item.protein}g • C: ${item.carbs}g • F: ${item.fat}g</span>
+          <div style="display: flex; align-items: center; gap: 6px;">
+            <span class="entry-name">${this.escapeHtml(item.name)}</span>
+            ${badge ? `<span class="badge badge-outline" style="font-size: 10px; padding: 1px 6px;">${badge}</span>` : ''}
+          </div>
+          <span class="entry-macros">${item.brand || 'Item'} • ${item.serving}${item.unit} • P: ${item.protein}g • C: ${item.carbs}g • F: ${item.fat}g</span>
         </div>
         <div class="entry-right">
           <span class="entry-kcal">${item.calories} kcal</span>
-          <span style="color: var(--primary); font-weight: 700;">+</span>
+          <span style="color: var(--primary); font-weight: 700; font-size: 16px;">+</span>
         </div>
       </div>
-    `).join('');
+    `;
+  }
+
+  // --- Serving Adjuster ---
+  selectFoodForAdjust(food) {
+    this.activeAdjustFood = food;
+    const panel = document.getElementById('serving-adjuster-panel');
+    if (!panel) return;
+
+    panel.classList.remove('hidden');
+    document.getElementById('adj-food-name').textContent = food.name;
+    document.getElementById('adj-food-brand').textContent = `${food.brand || 'Food'} (Base: ${food.serving}${food.unit})`;
+
+    const qtyInput = document.getElementById('adj-serving-qty');
+    if (qtyInput) qtyInput.value = food.serving || 100;
+
+    const confirmBtn = document.getElementById('btn-confirm-log');
+    if (confirmBtn) confirmBtn.textContent = `+ Log to ${this.currentMealType}`;
+
+    this.recalcAdjusterMacros();
+    panel.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+  }
+
+  closeServingAdjuster() {
+    this.activeAdjustFood = null;
+    const panel = document.getElementById('serving-adjuster-panel');
+    if (panel) panel.classList.add('hidden');
+  }
+
+  recalcAdjusterMacros() {
+    if (!this.activeAdjustFood) return;
+    const qty = parseFloat(document.getElementById('adj-serving-qty').value) || 0;
+    const baseServing = this.activeAdjustFood.serving || 100;
+    const ratio = baseServing > 0 ? (qty / baseServing) : 1;
+
+    const cal = Math.round(this.activeAdjustFood.calories * ratio);
+    const p = Math.round(this.activeAdjustFood.protein * ratio * 10) / 10;
+    const c = Math.round(this.activeAdjustFood.carbs * ratio * 10) / 10;
+    const f = Math.round(this.activeAdjustFood.fat * ratio * 10) / 10;
+
+    document.getElementById('adj-kcal').textContent = `${cal} kcal`;
+    document.getElementById('adj-p').textContent = `P: ${p}g`;
+    document.getElementById('adj-c').textContent = `C: ${c}g`;
+    document.getElementById('adj-f').textContent = `F: ${f}g`;
+  }
+
+  confirmLogAdjustedFood() {
+    if (!this.activeAdjustFood) return;
+    const qty = parseFloat(document.getElementById('adj-serving-qty').value) || 100;
+    const baseServing = this.activeAdjustFood.serving || 100;
+    const ratio = baseServing > 0 ? (qty / baseServing) : 1;
+
+    const foodToLog = {
+      ...this.activeAdjustFood,
+      serving: qty,
+      calories: Math.round(this.activeAdjustFood.calories * ratio),
+      protein: Math.round(this.activeAdjustFood.protein * ratio * 10) / 10,
+      carbs: Math.round(this.activeAdjustFood.carbs * ratio * 10) / 10,
+      fat: Math.round(this.activeAdjustFood.fat * ratio * 10) / 10
+    };
+
+    this.logFood(foodToLog, this.currentMealType);
+    this.closeServingAdjuster();
+    this.closeModal('modal-add-food');
+  }
+
+  // --- Live Camera Barcode Scanner ---
+  openBarcodeModal() {
+    this.closeFab();
+    const modal = document.getElementById('modal-barcode');
+    if (modal) modal.classList.remove('hidden');
+    this.startBarcodeCamera();
+  }
+
+  closeBarcodeModal() {
+    this.stopBarcodeCamera();
+    const modal = document.getElementById('modal-barcode');
+    if (modal) modal.classList.add('hidden');
+  }
+
+  startBarcodeCamera() {
+    const statusEl = document.getElementById('barcode-camera-status');
+    const toggleBtn = document.getElementById('btn-toggle-camera');
+    const video = document.getElementById('barcode-video');
+    if (!video) return;
+
+    if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
+      if (statusEl) statusEl.textContent = 'Camera not accessible in this browser. Use photo upload or manual entry below.';
+      return;
+    }
+
+    if (statusEl) statusEl.textContent = 'Starting camera...';
+
+    navigator.mediaDevices.getUserMedia({
+      video: { facingMode: { ideal: 'environment' } }
+    })
+      .then(stream => {
+        this.cameraStream = stream;
+        video.srcObject = stream;
+        video.setAttribute('playsinline', 'true');
+        video.play();
+        if (statusEl) statusEl.textContent = 'Point camera directly at food barcode';
+        if (toggleBtn) {
+          toggleBtn.textContent = 'Stop Camera';
+          toggleBtn.onclick = () => this.stopBarcodeCamera();
+        }
+
+        // Real-time Barcode Detection if supported
+        if ('BarcodeDetector' in window) {
+          const barcodeDetector = new BarcodeDetector({
+            formats: ['ean_13', 'ean_8', 'upc_a', 'upc_e', 'code_128', 'qr_code']
+          });
+
+          clearInterval(this.barcodeInterval);
+          this.barcodeInterval = setInterval(async () => {
+            if (video.readyState === video.HAVE_ENOUGH_DATA) {
+              try {
+                const barcodes = await barcodeDetector.detect(video);
+                if (barcodes.length > 0) {
+                  const code = barcodes[0].rawValue;
+                  clearInterval(this.barcodeInterval);
+                  if (navigator.vibrate) navigator.vibrate(100);
+                  if (statusEl) statusEl.textContent = `Scanned barcode: ${code}! Fetching info...`;
+                  this.lookupBarcode(code);
+                }
+              } catch (e) {
+                // frame detection pass
+              }
+            }
+          }, 300);
+        } else {
+          if (statusEl) statusEl.textContent = 'Camera ready. Take photo or enter code below.';
+        }
+      })
+      .catch(err => {
+        console.warn('Camera permission denied or unavailable:', err);
+        if (statusEl) statusEl.textContent = 'Camera access denied. Use photo upload or enter numbers below.';
+      });
+  }
+
+  stopBarcodeCamera() {
+    clearInterval(this.barcodeInterval);
+    if (this.cameraStream) {
+      this.cameraStream.getTracks().forEach(track => track.stop());
+      this.cameraStream = null;
+    }
+    const video = document.getElementById('barcode-video');
+    if (video) video.srcObject = null;
+
+    const toggleBtn = document.getElementById('btn-toggle-camera');
+    if (toggleBtn) {
+      toggleBtn.textContent = 'Start Live Camera';
+      toggleBtn.onclick = () => this.startBarcodeCamera();
+    }
+  }
+
+  handleBarcodeImageFile(event) {
+    const file = event.target.files && event.target.files[0];
+    if (!file) return;
+
+    const statusEl = document.getElementById('barcode-camera-status');
+    if (statusEl) statusEl.textContent = 'Analyzing barcode photo...';
+
+    if ('BarcodeDetector' in window) {
+      createImageBitmap(file)
+        .then(bitmap => {
+          const barcodeDetector = new BarcodeDetector({
+            formats: ['ean_13', 'ean_8', 'upc_a', 'upc_e', 'code_128']
+          });
+          return barcodeDetector.detect(bitmap);
+        })
+        .then(barcodes => {
+          if (barcodes && barcodes.length > 0) {
+            const code = barcodes[0].rawValue;
+            if (statusEl) statusEl.textContent = `Barcode detected: ${code}`;
+            this.lookupBarcode(code);
+          } else {
+            if (statusEl) statusEl.textContent = 'Could not detect barcode. Please enter numbers manually.';
+          }
+        })
+        .catch(() => {
+          if (statusEl) statusEl.textContent = 'Please enter barcode numbers manually below.';
+        });
+    } else {
+      if (statusEl) statusEl.textContent = 'Photo received. Please confirm barcode digits below.';
+    }
   }
 
   openCustomFoodModal() {
+    this.closeFab();
     document.getElementById('modal-custom-food').classList.remove('hidden');
   }
 
@@ -917,10 +1341,6 @@ class NutriLogPWA {
     alert(`✓ Added "${name}" to your Foods Library!`);
   }
 
-  openBarcodeModal() {
-    document.getElementById('modal-barcode').classList.remove('hidden');
-  }
-
   lookupBarcode(code) {
     const trimmed = (code || '').trim();
     const resultArea = document.getElementById('barcode-result-area');
@@ -948,20 +1368,32 @@ class NutriLogPWA {
             fiber: Math.round((nut.fiber_100g || 0) * 10) / 10
           };
 
+          // Save to library as well
+          const lib = this.getFoodLibrary();
+          if (!lib.some(f => f.name.toLowerCase() === food.name.toLowerCase())) {
+            lib.unshift({ ...food, favorite: true });
+            this.saveFoodLibrary(lib);
+            this.renderFavorites();
+          }
+
           resultArea.innerHTML = `
             <div class="card" style="padding: 12px; margin-top: 10px;">
               <strong>${this.escapeHtml(food.name)}</strong>
               <div class="text-sub">${food.brand} • 100g = ${food.calories} kcal</div>
               <div class="text-sub">P: ${food.protein}g • C: ${food.carbs}g • F: ${food.fat}g</div>
-              <button class="btn btn-primary btn-block btn-sm" style="margin-top: 8px;" onclick="app.logFood(${this.escapeJson(food)}, '${this.currentMealType}')">Log ${food.name}</button>
+              <div style="display: flex; gap: 8px; margin-top: 10px;">
+                <button class="btn btn-primary btn-block btn-sm" onclick="app.logFood(${this.escapeJson(food)}, '${this.currentMealType}'); app.closeBarcodeModal();">
+                  + Log to ${this.currentMealType}
+                </button>
+              </div>
             </div>
           `;
         } else {
-          resultArea.innerHTML = `<div class="text-sub" style="color: var(--error-color);">Product not found for barcode ${trimmed}. You can log it as a custom food.</div>`;
+          resultArea.innerHTML = `<div class="text-sub" style="color: var(--error-color); padding: 8px 0;">Product not found for barcode ${trimmed}. You can log it as a custom food below.</div>`;
         }
       })
       .catch(() => {
-        resultArea.innerHTML = `<div class="text-sub">Unable to connect to barcode server. Verify your internet connection.</div>`;
+        resultArea.innerHTML = `<div class="text-sub" style="padding: 8px 0;">Unable to connect to barcode server. Please check your internet connection.</div>`;
       });
   }
 

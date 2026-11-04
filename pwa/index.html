@@ -191,6 +191,29 @@
             <ul id="entries-SNACK" class="meal-entries-list"></ul>
           </article>
         </div>
+
+        <!-- Floating Action Button (+) matching preview -->
+        <div class="fab-container">
+          <div id="fab-menu" class="fab-menu hidden">
+            <button class="fab-item" onclick="app.openBarcodeModal()">
+              <span class="fab-item-icon">📷</span>
+              <span>Scan Barcode</span>
+            </button>
+            <button class="fab-item" onclick="app.openAiRecipeModal()">
+              <span class="fab-item-icon">✨</span>
+              <span>Scan Label / Photo</span>
+            </button>
+            <button class="fab-item" onclick="app.openCustomFoodModal()">
+              <span class="fab-item-icon">➕</span>
+              <span>Create Custom Food</span>
+            </button>
+            <button class="fab-item" onclick="app.openAddFoodModal('BREAKFAST')">
+              <span class="fab-item-icon">🔍</span>
+              <span>Search All Foods</span>
+            </button>
+          </div>
+          <button id="btn-main-fab" class="fab-main" onclick="app.toggleFab()" aria-label="Add Food Actions" title="Add Food">+</button>
+        </div>
       </section>
 
       <!-- TAB 2: HISTORY -->
@@ -490,16 +513,66 @@
   <div id="modal-add-food" class="modal-overlay hidden" role="dialog" aria-modal="true">
     <div class="modal-card">
       <div class="modal-header">
-        <h3 id="modal-meal-title">Add Food to Breakfast</h3>
+        <div style="display: flex; align-items: center; gap: 8px;">
+          <h3 style="margin: 0; font-size: 16px;">Add to</h3>
+          <select id="modal-meal-select" class="form-input" style="width: auto; padding: 4px 8px; font-weight: bold;" onchange="app.currentMealType = this.value">
+            <option value="BREAKFAST">Breakfast</option>
+            <option value="LUNCH">Lunch</option>
+            <option value="DINNER">Dinner</option>
+            <option value="SNACK">Snacks</option>
+          </select>
+        </div>
         <button class="btn-icon" onclick="app.closeModal('modal-add-food')" aria-label="Close modal">&times;</button>
       </div>
       <div class="modal-body">
-        <div class="search-input-wrap">
-          <input type="text" id="food-search-box" class="form-input" placeholder="Search food, staple, or barcode..." oninput="app.searchFoods(this.value)">
-        </div>
-        <div class="quick-scanner-shortcuts">
+        <!-- Quick Scanner / Creation Actions -->
+        <div class="quick-scanner-shortcuts" style="margin-bottom: 12px; display: flex; gap: 8px;">
           <button class="btn btn-outline btn-sm" onclick="app.openBarcodeModal()">📷 Scan Barcode</button>
+          <button class="btn btn-outline btn-sm" onclick="app.openCustomFoodModal()">➕ Custom Food</button>
           <button class="btn btn-outline btn-sm" onclick="app.openAiRecipeModal()">✨ Scan Label / Photo</button>
+        </div>
+
+        <!-- Modal Subtabs -->
+        <div class="modal-subtabs">
+          <button id="subtab-all" class="subtab-btn active" onclick="app.switchModalSubTab('all')">🔍 Search All Foods</button>
+          <button id="subtab-favs" class="subtab-btn" onclick="app.switchModalSubTab('favorites')">⭐ Favorites</button>
+          <button id="subtab-recents" class="subtab-btn" onclick="app.switchModalSubTab('recents')">🕒 Recent</button>
+        </div>
+
+        <!-- Search Input -->
+        <div class="search-input-wrap">
+          <input type="text" id="food-search-box" class="form-input" placeholder="Search millions of foods (e.g. egg, chicken, oats, yogurt)..." oninput="app.onSearchInput(this.value)">
+        </div>
+
+        <!-- Serving Adjuster Card -->
+        <div id="serving-adjuster-panel" class="serving-adjuster-card hidden">
+          <div class="serving-adjuster-header">
+            <div>
+              <strong id="adj-food-name">Food Name</strong>
+              <div id="adj-food-brand" class="text-sub">Brand</div>
+            </div>
+            <button class="btn-icon" onclick="app.closeServingAdjuster()">&times;</button>
+          </div>
+          <div style="display: flex; gap: 10px; align-items: center;">
+            <div style="flex: 1;">
+              <label for="adj-serving-qty" style="font-size: 11px; color: var(--text-sub);">Portion (grams / ml):</label>
+              <input type="number" id="adj-serving-qty" class="form-input" style="padding: 6px 10px;" value="100" min="1" max="5000" oninput="app.recalcAdjusterMacros()">
+            </div>
+            <button id="btn-confirm-log" class="btn btn-primary" style="margin-top: 14px;" onclick="app.confirmLogAdjustedFood()">
+              + Log Food
+            </button>
+          </div>
+          <div class="serving-adjuster-macros">
+            <span id="adj-kcal" class="color-calories font-bold" style="font-weight: 700;">0 kcal</span>
+            <span id="adj-p" class="color-protein">P: 0g</span>
+            <span id="adj-c" class="color-carbs">C: 0g</span>
+            <span id="adj-f" class="color-fat">F: 0g</span>
+          </div>
+        </div>
+
+        <!-- Search Results List -->
+        <div id="food-search-loading" class="text-sub hidden" style="text-align: center; padding: 10px;">
+          ⏳ Searching food database...
         </div>
         <div id="food-search-results" class="search-results-list"></div>
       </div>
@@ -552,24 +625,51 @@
     </div>
   </div>
 
-  <!-- Modal: Barcode Scanner -->
+  <!-- Modal: Live Camera Barcode Scanner -->
   <div id="modal-barcode" class="modal-overlay hidden" role="dialog" aria-modal="true">
     <div class="modal-card">
       <div class="modal-header">
-        <h3>Barcode Scanner</h3>
-        <button class="btn-icon" onclick="app.closeModal('modal-barcode')" aria-label="Close modal">&times;</button>
+        <h3>📷 Barcode Scanner</h3>
+        <button class="btn-icon" onclick="app.closeBarcodeModal()" aria-label="Close modal">&times;</button>
       </div>
       <div class="modal-body barcode-modal-body">
-        <p class="text-sub">Enter a 12-13 digit UPC/EAN or test barcode:</p>
-        <div class="barcode-input-row">
-          <input type="text" id="barcode-manual-input" class="form-input" placeholder="e.g. 011110825316" inputmode="numeric">
-          <button class="btn btn-primary" onclick="app.lookupBarcode(document.getElementById('barcode-manual-input').value)">Lookup</button>
+        <!-- Real Live Camera Viewfinder -->
+        <div class="camera-scanner-wrap" id="camera-scanner-container">
+          <video id="barcode-video" class="camera-preview" autoplay playsinline muted></video>
+          <div class="scanner-overlay">
+            <div class="scanner-reticle">
+              <div class="scanner-laser"></div>
+            </div>
+          </div>
         </div>
-        <div class="barcode-examples">
-          <span>Common examples:</span>
-          <button class="chip" onclick="app.lookupBarcode('737628064502')">Thai Noodles</button>
-          <button class="chip" onclick="app.lookupBarcode('041570054238')">Oat Milk</button>
+
+        <div id="barcode-camera-status" class="text-sub" style="text-align: center; margin-bottom: 8px;">
+          Point camera at barcode to scan automatically
         </div>
+
+        <div class="camera-controls">
+          <button id="btn-toggle-camera" class="btn btn-primary btn-sm" onclick="app.startBarcodeCamera()">Start Live Camera</button>
+          <label class="btn btn-outline btn-sm file-label">
+            📸 Photo / Upload
+            <input type="file" id="barcode-file-input" accept="image/*" capture="environment" class="hidden" onchange="app.handleBarcodeImageFile(event)">
+          </label>
+        </div>
+
+        <!-- Manual barcode input fallback -->
+        <details style="margin-top: 14px; font-size: 12px; color: var(--text-sub);">
+          <summary style="cursor: pointer; padding: 4px 0;">Or enter UPC / EAN barcode numbers manually</summary>
+          <div class="barcode-input-row" style="margin-top: 8px;">
+            <input type="text" id="barcode-manual-input" class="form-input" placeholder="e.g. 011110825316" inputmode="numeric">
+            <button class="btn btn-primary btn-sm" onclick="app.lookupBarcode(document.getElementById('barcode-manual-input').value)">Lookup</button>
+          </div>
+          <div class="barcode-examples" style="margin-top: 6px;">
+            <span>Examples:</span>
+            <button class="chip" onclick="app.lookupBarcode('737628064502')">Thai Noodles</button>
+            <button class="chip" onclick="app.lookupBarcode('041570054238')">Oat Milk</button>
+            <button class="chip" onclick="app.lookupBarcode('038000359217')">Kellogg's Cereal</button>
+          </div>
+        </details>
+
         <div id="barcode-result-area" class="barcode-result-area hidden"></div>
       </div>
     </div>

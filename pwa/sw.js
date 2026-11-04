@@ -1,7 +1,7 @@
 // NutriLog Service Worker (sw.js)
 // Manages offline cache and seamless background updates for NutriLog PWA
 
-const VERSION = '1.0.1';
+const VERSION = '1.0.2';
 const CACHE_NAME = `nutrilog-pwa-v${VERSION}`;
 
 const CORE_ASSETS = [

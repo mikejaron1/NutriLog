@@ -17,6 +17,7 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.DeleteOutline
 import androidx.compose.material.icons.filled.Favorite
 import androidx.compose.material.icons.filled.FavoriteBorder
 import androidx.compose.material.icons.filled.History
@@ -58,6 +59,7 @@ fun FavoritesAndRecentsScreen(
     allFoods: List<FoodItem>,
     onFoodSelected: (FoodItem) -> Unit,
     onToggleFavorite: (FoodItem) -> Unit,
+    onDeleteFood: (FoodItem) -> Unit,
     onAddNewCustomFood: () -> Unit,
     modifier: Modifier = Modifier
 ) {
@@ -209,7 +211,8 @@ fun FavoritesAndRecentsScreen(
                     SavedFoodCard(
                         foodItem = item,
                         onClick = { onFoodSelected(item) },
-                        onToggleFavorite = { onToggleFavorite(item) }
+                        onToggleFavorite = { onToggleFavorite(item) },
+                        onDelete = { onDeleteFood(item) }
                     )
                 }
                 item {
@@ -224,7 +227,8 @@ fun FavoritesAndRecentsScreen(
 private fun SavedFoodCard(
     foodItem: FoodItem,
     onClick: () -> Unit,
-    onToggleFavorite: () -> Unit
+    onToggleFavorite: () -> Unit,
+    onDelete: () -> Unit
 ) {
     Card(
         modifier = Modifier
@@ -276,12 +280,21 @@ private fun SavedFoodCard(
                 }
             }
 
-            IconButton(onClick = onToggleFavorite) {
-                Icon(
-                    imageVector = if (foodItem.isFavorite) Icons.Default.Favorite else Icons.Default.FavoriteBorder,
-                    contentDescription = "Toggle Favorite",
-                    tint = if (foodItem.isFavorite) MaterialTheme.colorScheme.error else MaterialTheme.colorScheme.onSurfaceVariant
-                )
+            Row(verticalAlignment = Alignment.CenterVertically) {
+                IconButton(onClick = onToggleFavorite) {
+                    Icon(
+                        imageVector = if (foodItem.isFavorite) Icons.Default.Favorite else Icons.Default.FavoriteBorder,
+                        contentDescription = "Toggle Favorite",
+                        tint = if (foodItem.isFavorite) MaterialTheme.colorScheme.error else MaterialTheme.colorScheme.onSurfaceVariant
+                    )
+                }
+                IconButton(onClick = onDelete) {
+                    Icon(
+                        imageVector = Icons.Default.DeleteOutline,
+                        contentDescription = "Delete Food",
+                        tint = MaterialTheme.colorScheme.error.copy(alpha = 0.7f)
+                    )
+                }
             }
         }
     }

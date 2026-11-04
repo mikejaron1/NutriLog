@@ -252,6 +252,9 @@ fun MainScreen(viewModel: NutriViewModel) {
                         onToggleFavorite = { item ->
                             viewModel.toggleFavorite(item)
                         },
+                        onDeleteFood = { item ->
+                            viewModel.deleteFoodItem(item)
+                        },
                         onAddNewCustomFood = { showAddCustomFood = true }
                     )
                     4 -> SettingsAndSyncScreen(
